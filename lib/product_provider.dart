@@ -1,41 +1,58 @@
 import 'package:flutter/material.dart';
+import 'firestore_service.dart';
 import 'product.dart';
 
 class ProductProvider with ChangeNotifier {
-  final List<Product> _products = [
-  Product(
-    id: '1',
-    name: 'Product 1',
-    description: 'Description for product 1',
-    price: 29.99,
-    imageUrl: 'https://baconmockup.com/200/300',
-  ),
-  Product(
-    id: '2',
-    name: 'Product 2',
-    description: 'Description for product 2',
-    price: 49.99,
-    imageUrl: 'https://loremflickr.com/200/300',
-  ),
-];
+  final FirestoreService _firestoreService = FirestoreService();
+   List<Product> _products = [];
+  List<Product> _filteredProducts = [];
+  List<Product> _wishlist = [];
 
-  List<Product> get products => [..._products];
+  List<Product> get products => _products;
+  List<Product> get filteredProducts => _filteredProducts;
+  List<Product> get wishlist => _wishlist;
 
-  void addProduct(Product product) {
-    _products.add(product);
+  ProductProvider() {
+    _firestoreService.getProducts().listen(_updateProducts);
+  }
+
+  void _updateProducts(List<Product> products) {
+    _products = products;
+    _filteredProducts = products;
     notifyListeners();
   }
 
-  void updateProduct(String id, Product newProduct) {
-    final index = _products.indexWhere((prod) => prod.id == id);
-    if (index >= 0) {
-      _products[index] = newProduct;
-      notifyListeners();
+  void addToWishlist(Product product) {
+    _wishlist.add(product);
+    notifyListeners();
+  }
+
+  void removeFromWishlist(String productId) {
+    _wishlist.removeWhere((product) => product.id == productId);
+    notifyListeners();
+  }
+
+  void searchProducts(String query) {
+    if (query.isEmpty) {
+      _filteredProducts = _products;
+    } else {
+      _filteredProducts = _products.where((product) {
+        return product.name.toLowerCase().contains(query.toLowerCase());
+      }).toList();
     }
+    notifyListeners();
   }
 
-  void deleteProduct(String id) {
-    _products.removeWhere((prod) => prod.id == id);
-    notifyListeners();
+
+  Future<void> addProduct(Product product) async {
+    await _firestoreService.addProduct(product);
+  }
+
+  Future<void> updateProduct(Product product) async {
+    await _firestoreService.updateProduct(product);
+  }
+
+  Future<void> deleteProduct(String id) async {
+    await _firestoreService.deleteProduct(id);
   }
 }

@@ -38,6 +38,8 @@ dependencies:
   firebase_core: ^3.3.0
   firebase_auth: ^5.1.4
   provider: ^6.1.2
+  cloud_firestore: ^5.2.1
+  # firebase_messaging: ^15.0.4
   
 
 dev_dependencies:
