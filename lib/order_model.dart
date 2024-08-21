@@ -20,10 +20,12 @@ class Order {
     final data = doc.data() as Map<String, dynamic>;
     return Order(
       id: doc.id,
-      userId: data['userId'],
-      products: (data['products'] as List).map((item) => Product.fromFirestore(item)).toList(),
-      totalAmount: data['totalAmount'],
-      date: (data['date'] as Timestamp).toDate(),
+      userId: data['userId'] ?? '',
+      products: (data['products'] as List)
+          .map((item) => Product.fromMap(item as Map<String, dynamic>, ''))
+          .toList(),
+      totalAmount: (data['totalAmount'] as num?)?.toDouble() ?? 0.0,
+      date: (data['date'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
 
