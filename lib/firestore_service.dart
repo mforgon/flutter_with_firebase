@@ -69,4 +69,19 @@ Stream<List<Product>> getProducts() {
 }
 
 
+Future<void> addToWishlist(String userId, Product product) async {
+    try {
+      await _db.collection('users').doc(userId).collection('wishlist').doc(product.id).set({
+        'name': product.name,
+        'price': product.price,
+        'imageUrl': product.imageUrl,
+        // Add other product fields as necessary
+      });
+    } catch (e) {
+      print('Error adding to wishlist: $e');
+    }
+  }
+
+
 }
+

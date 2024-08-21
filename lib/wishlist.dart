@@ -18,6 +18,12 @@ class WishlistPage extends StatelessWidget {
         itemBuilder: (context, index) {
           final product = productProvider.wishlist[index];
           return ListTile(
+            leading: Image.network(
+              product.imageUrl,
+              width: 50,
+              height: 50,
+              fit: BoxFit.cover,
+            ),
             title: Text(product.name),
             subtitle: Text('\$${product.price.toStringAsFixed(2)}'),
             trailing: IconButton(

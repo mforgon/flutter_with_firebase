@@ -14,7 +14,7 @@ class ProductDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final productProvider = Provider.of<ProductProvider>(context);
+    Provider.of<ProductProvider>(context);
     final firestoreService = Provider.of<FirestoreService>(context);
 
     return Scaffold(
@@ -26,6 +26,16 @@ class ProductDetailsPage extends StatelessWidget {
           Image.network(product.imageUrl),
           Text(product.name), // Removed const
           Text('\$${product.price.toStringAsFixed(2)}'), // Removed const
+          ElevatedButton(
+            onPressed: () {
+              // Add the product to the wishlist
+              Provider.of<ProductProvider>(context, listen: false).addToWishlist(product);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('${product.name} added to wishlist!')),
+              );
+            },
+            child: Text('Add to Wishlist'),
+          ),
           Expanded(
             child: StreamBuilder<List<Review>>(
               stream: firestoreService.getReviews(product.id),

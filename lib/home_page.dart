@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_with_firebase/order_model.dart';
 import 'package:flutter_with_firebase/product.dart';
 import 'package:flutter_with_firebase/profile_page.dart';
+import 'package:flutter_with_firebase/wishlist.dart';
 import 'package:provider/provider.dart';
 import 'product_provider.dart';
 import 'product_details_page.dart';
@@ -82,13 +83,6 @@ class HomePage extends StatelessWidget {
             icon: const Icon(Icons.history),
             onPressed: () {
               // Ensure firestoreService is available
-              if (firestoreService == null) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                      content: Text('FirestoreService not available')),
-                );
-                return;
-              }
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -96,6 +90,15 @@ class HomePage extends StatelessWidget {
               );
             },
           ),
+          IconButton(
+      icon: const Icon(Icons.favorite), // Wishlist button
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const WishlistPage()), // Navigate to WishlistPage
+        );
+      },
+    ),
         ],
       ),
       body: Column(
