@@ -4,9 +4,9 @@ import 'product.dart';
 
 class ProductProvider with ChangeNotifier {
   final FirestoreService _firestoreService = FirestoreService();
-   List<Product> _products = [];
+  List<Product> _products = [];
   List<Product> _filteredProducts = [];
-  List<Product> _wishlist = [];
+  final List<Product> _wishlist = [];
 
   List<Product> get products => _products;
   List<Product> get filteredProducts => _filteredProducts;
@@ -42,7 +42,6 @@ class ProductProvider with ChangeNotifier {
     }
     notifyListeners();
   }
-
 
   Future<void> addProduct(Product product) async {
     await _firestoreService.addProduct(product);

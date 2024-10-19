@@ -10,7 +10,8 @@ import 'firestore_service.dart';
 class ProductDetailsPage extends StatelessWidget {
   final Product product;
 
-  ProductDetailsPage(this.product, {super.key}) : assert(product.id.isNotEmpty, 'Product ID cannot be empty');
+  ProductDetailsPage(this.product, {super.key})
+      : assert(product.id.isNotEmpty, 'Product ID cannot be empty');
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +30,13 @@ class ProductDetailsPage extends StatelessWidget {
           ElevatedButton(
             onPressed: () {
               // Add the product to the wishlist
-              Provider.of<ProductProvider>(context, listen: false).addToWishlist(product);
+              Provider.of<ProductProvider>(context, listen: false)
+                  .addToWishlist(product);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('${product.name} added to wishlist!')),
               );
             },
-            child: Text('Add to Wishlist'),
+            child: const Text('Add to Wishlist'),
           ),
           Expanded(
             child: StreamBuilder<List<Review>>(

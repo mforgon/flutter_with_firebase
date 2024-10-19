@@ -72,9 +72,7 @@ class HomePage extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => const ProfilePage()),
               );
             },
-          )
-
-          ,
+          ),
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () => _signOut(context),
@@ -85,20 +83,21 @@ class HomePage extends StatelessWidget {
               // Ensure firestoreService is available
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => OrderHistoryPage()),
+                MaterialPageRoute(builder: (context) => OrderHistoryPage()),
               );
             },
           ),
           IconButton(
-      icon: const Icon(Icons.favorite), // Wishlist button
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const WishlistPage()), // Navigate to WishlistPage
-        );
-      },
-    ),
+            icon: const Icon(Icons.favorite), // Wishlist button
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        const WishlistPage()), // Navigate to WishlistPage
+              );
+            },
+          ),
         ],
       ),
       body: Column(
@@ -134,9 +133,6 @@ class HomePage extends StatelessWidget {
                   );
                 },
                 child: GridTile(
-                  child: Image.network(
-                      productProvider.filteredProducts[i].imageUrl,
-                      fit: BoxFit.cover),
                   footer: GridTileBar(
                     backgroundColor: Colors.black87,
                     title: Column(
@@ -194,6 +190,9 @@ class HomePage extends StatelessWidget {
                       ],
                     ),
                   ),
+                  child: Image.network(
+                      productProvider.filteredProducts[i].imageUrl,
+                      fit: BoxFit.cover),
                 ),
               ),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
