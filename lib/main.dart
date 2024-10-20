@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_with_firebase/firestore_service.dart';
 import 'package:flutter_with_firebase/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'auth_wrapper.dart';
+import 'language/app_localizations.dart';
 import 'product_provider.dart';
+import 'language/language_provider.dart';
 
 // Remove the firebase_messaging import
 // import 'package:firebase_messaging/firebase_messaging.dart';
@@ -42,17 +45,30 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ProductProvider()),
-        Provider(create: (_) => FirestoreService()), // resolve the ProviderNotFoundError
-      ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        Provider(create: (_) => FirestoreService()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => LanguageProvider()), // Add this line
       ],
-      child: Consumer<ThemeProvider>(
-        builder: (context, themeProvider, child) {
+      child: Consumer2<ThemeProvider, LanguageProvider>(
+        builder: (context, themeProvider, languageProvider, child) {
           return MaterialApp(
             title: 'E-commerce App',
             theme: ThemeData.light(),
             darkTheme: ThemeData.dark(),
             themeMode: themeProvider.themeMode,
             home: const AuthWrapper(),
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale('en', ''),
+              Locale('zh', ''),
+              Locale('km', ''),
+            ],
+            locale: languageProvider.locale,
           );
         },
       ),
