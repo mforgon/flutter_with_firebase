@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_with_firebase/order_model.dart';
 import 'package:flutter_with_firebase/product.dart';
@@ -11,7 +10,7 @@ import 'edit_product_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'login_page.dart';
 import 'package:flutter_with_firebase/firestore_service.dart';
-import 'order_history.dart'; // Ensure the correct import path
+import 'order_history.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -47,53 +46,109 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('VJmerce Home'),
+        title: const Text(
+          'VJmerce',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 24.0,
+          ),
+        ),
+        centerTitle: true,
+        elevation: 0.0,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
         actions: [
           IconButton(
-            icon: const Icon(Icons.favorite), // Wishlist button
+            icon: Stack(
+              children: [
+                const Icon(Icons.favorite, color: Colors.redAccent),
+                Positioned(
+                  right: 0,
+                  child: Container(
+                    padding: const EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    constraints: const BoxConstraints(
+                      minWidth: 16,
+                      minHeight: 16,
+                    ),
+                    child: const Text(
+                      '2',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                )
+              ],
+            ),
             onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                    const WishlistPage()), // Navigate to WishlistPage
+                    builder: (context) => const WishlistPage()),
               );
             },
           ),
           IconButton(
-            icon: const Icon(Icons.shopping_cart),
+            icon: Stack(
+              children: [
+                const Icon(Icons.shopping_cart, color: Colors.black),
+                Positioned(
+                  right: 0,
+                  child: Container(
+                    padding: const EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    constraints: const BoxConstraints(
+                      minWidth: 16,
+                      minHeight: 16,
+                    ),
+                    child: const Text(
+                      '3',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                )
+              ],
+            ),
             onPressed: () {
-              // Ensure firestoreService is available
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const OrderHistoryPage()),
               );
             },
           ),
-
         ],
       ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            DrawerHeader(
-              decoration: const BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: Text(
-                'Hello, ${user.email ?? 'User'}',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
+            UserAccountsDrawerHeader(
+              decoration: const BoxDecoration(color: Colors.blueAccent),
+              accountName: Text(user.email ?? 'User'),
+              accountEmail: const Text('User Profile'),
+              currentAccountPicture: const CircleAvatar(
+                backgroundColor: Colors.white,
+                child: Icon(Icons.person, size: 50, color: Colors.blueAccent),
               ),
             ),
             ListTile(
               leading: const Icon(Icons.person),
               title: const Text('Profile'),
               onTap: () {
-                Navigator.pop(context); // Close the drawer
+                Navigator.pop(context);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const ProfilePage()),
@@ -112,21 +167,31 @@ class HomePage extends StatelessWidget {
         children: [
           // Search Bar
           Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Search for products...',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(25.0),
-                  borderSide: BorderSide.none,
-                ),
-                filled: true,
-                fillColor: Colors.grey[200],
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(25.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 4.0,
+                    spreadRadius: 1.0,
+                    offset: Offset(2.0, 2.0),
+                  ),
+                ],
               ),
-              onChanged: (value) {
-                productProvider.searchProducts(value);
-              },
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'Search for products...',
+                  prefixIcon: const Icon(Icons.search),
+                  border: InputBorder.none,
+                  contentPadding: const EdgeInsets.symmetric(vertical: 14.0),
+                ),
+                onChanged: (value) {
+                  productProvider.searchProducts(value);
+                },
+              ),
             ),
           ),
           Expanded(
@@ -142,13 +207,18 @@ class HomePage extends StatelessWidget {
               itemBuilder: (context, index) {
                 final product = productProvider.filteredProducts[index];
                 return _buildProductCard(
-                    context, product, user, firestoreService, productProvider);
+                  context,
+                  product,
+                  user,
+                  firestoreService,
+                  productProvider,
+                );
               },
             ),
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.push(
             context,
@@ -157,7 +227,9 @@ class HomePage extends StatelessWidget {
             ),
           );
         },
-        child: const Icon(Icons.add),
+        label: const Text('Add Product'),
+        icon: const Icon(Icons.add),
+        backgroundColor: Colors.blueAccent,
       ),
     );
   }
@@ -169,10 +241,10 @@ class HomePage extends StatelessWidget {
       FirestoreService firestoreService,
       ProductProvider productProvider) {
     return Card(
-      clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
       ),
+      elevation: 2.0,
       child: InkWell(
         onTap: () {
           Navigator.push(
@@ -186,10 +258,12 @@ class HomePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
-              child: Image.network(
-                product.imageUrl,
-                height: 150,
-                fit: BoxFit.cover,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(16.0)),
+                child: Image.network(
+                  product.imageUrl,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             Padding(
@@ -203,8 +277,8 @@ class HomePage extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       fontSize: 16.0,
                     ),
-                    maxLines: 2, // Limit the number of lines for the title
-                    overflow: TextOverflow.ellipsis, // Add ellipsis to indicate overflow
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4.0),
                   Text(
