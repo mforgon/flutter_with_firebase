@@ -81,7 +81,12 @@ List<Product> getRecommendedProducts() {
 }
 
 
-
+void sortProductsByPrice(bool ascending) {
+    _filteredProducts.sort((a, b) => ascending
+        ? a.price.compareTo(b.price)
+        : b.price.compareTo(a.price));
+    notifyListeners();
+  }
 
 
   Future<void> addProduct(Product product) async {

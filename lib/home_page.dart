@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_with_firebase/order_model.dart';
 import 'package:flutter_with_firebase/product.dart';
@@ -22,8 +21,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String _selectedCategory = 'All';
-  List<String> _categories = ["All", "electronics","jewelery","men's clothing","women's clothing"];
-
+  List<String> _categories = [
+    "All",
+    "electronics",
+    "jewelery",
+    "men's clothing",
+    "women's clothing"
+  ];
+  String _priceSort = 'None';
   @override
   Widget build(BuildContext context) {
     final productProvider = Provider.of<ProductProvider>(context);
@@ -53,49 +58,49 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         actions: [
-     IconButton(
-  icon: Stack(
-    children: [
-      const Icon(Icons.favorite, color: Colors.redAccent),
-      Positioned(
-        right: 0,
-        top: 0,
-        child: Container(
-          padding: const EdgeInsets.all(1),
-          decoration: BoxDecoration(
-            color: Colors.red,
-            borderRadius: BorderRadius.circular(6),
-          ),
-          constraints: const BoxConstraints(
-            minWidth: 12,
-            minHeight: 12,
-          ),
-          child: Text(
-            '${productProvider.wishlist.length}',
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 8,
+          IconButton(
+            icon: Stack(
+              children: [
+                const Icon(Icons.favorite, color: Colors.redAccent),
+                Positioned(
+                  right: 0,
+                  top: 0,
+                  child: Container(
+                    padding: const EdgeInsets.all(1),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    constraints: const BoxConstraints(
+                      minWidth: 12,
+                      minHeight: 12,
+                    ),
+                    child: Text(
+                      '${productProvider.wishlist.length}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 8,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                )
+              ],
             ),
-            textAlign: TextAlign.center,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const WishlistPage()),
+              );
+            },
           ),
-        ),
-      )
-    ],
-  ),
-  onPressed: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const WishlistPage()),
-    );
-  },
-),
-
           IconButton(
             icon: const Icon(Icons.shopping_cart, color: Colors.black),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const OrderHistoryPage()),
+                MaterialPageRoute(
+                    builder: (context) => const OrderHistoryPage()),
               );
             },
           ),
@@ -142,7 +147,8 @@ class _HomePageState extends State<HomePage> {
       body: CustomScrollView(
         slivers: [
           SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             sliver: SliverToBoxAdapter(
               child: TextField(
                 decoration: InputDecoration(
@@ -184,9 +190,62 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           SliverToBoxAdapter(
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Sort by Price:',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                  ),
+                  DropdownButton<String>(
+                    value: _priceSort,
+                    items: <String>[
+                      'None',
+                      'Lowest to Highest',
+                      'Highest to Lowest'
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            color: value == 'None'
+                                ? Colors.black
+                                : Colors.black,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _priceSort = newValue!;
+                      });
+                      if (newValue == 'Lowest to Highest') {
+                        productProvider.sortProductsByPrice(true);
+                      } else if (newValue == 'Highest to Lowest') {
+                        productProvider.sortProductsByPrice(false);
+                      }
+                    },
+                    style: const TextStyle(fontSize: 12, color: Colors.black87),
+                    underline: Container(
+                      height: 1,
+                      color: Colors.grey[300],
+                    ),
+                    icon: const Icon(Icons.arrow_drop_down, size: 20),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
             child: _buildHorizontalProductList(
-              context, 
-              'Recommended for You', 
+              context,
+              'Recommended for You',
               productProvider.getRecommendedProducts(),
             ),
           ),
@@ -199,7 +258,8 @@ class _HomePageState extends State<HomePage> {
                     padding: EdgeInsets.all(8.0),
                     child: Text(
                       'All Products',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
                   GridView.builder(
@@ -207,7 +267,8 @@ class _HomePageState extends State<HomePage> {
                     physics: const NeverScrollableScrollPhysics(),
                     padding: const EdgeInsets.all(8.0),
                     itemCount: productProvider.filteredProducts.length,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       childAspectRatio: 0.5,
                       crossAxisSpacing: 10,
@@ -215,7 +276,8 @@ class _HomePageState extends State<HomePage> {
                     ),
                     itemBuilder: (context, index) {
                       final product = productProvider.filteredProducts[index];
-                      return _buildProductCard(context, product, user, firestoreService, productProvider);
+                      return _buildProductCard(context, product, user,
+                          firestoreService, productProvider);
                     },
                   ),
                 ],
@@ -237,81 +299,79 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildHorizontalProductList(BuildContext context, String title, List<Product> products) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text(
-          title,
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+  Widget _buildHorizontalProductList(
+      BuildContext context, String title, List<Product> products) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            title,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
         ),
-      ),
-      SizedBox(
-        height: 220, // Increased height to accommodate content
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: products.length,
-          itemBuilder: (context, index) {
-            final product = products[index];
-            return Container(
-              width: 160, // Increased width for better layout
-              margin: const EdgeInsets.symmetric(horizontal: 4.0),
-              child: Card(
-                elevation: 2.0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClipRRect(
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(8.0)),
-                      child: Image.network(
-                        product.imageUrl,
-                        height: 120,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
+        SizedBox(
+          height: 220, // Increased height to accommodate content
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: products.length,
+            itemBuilder: (context, index) {
+              final product = products[index];
+              return Container(
+                width: 160, // Increased width for better layout
+                margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                child: Card(
+                  elevation: 2.0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                        borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(8.0)),
+                        child: Image.network(
+                          product.imageUrl,
+                          height: 120,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            product.name,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            '\$${product.price.toStringAsFixed(2)}',
-                            style: const TextStyle(color: Colors.green),
-                          ),
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              product.name,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              '\$${product.price.toStringAsFixed(2)}',
+                              style: const TextStyle(color: Colors.green),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
-      ),
-    ],
-  );
-}
+      ],
+    );
+  }
 
-
-  Widget _buildProductCard(
-    BuildContext context,
-    Product product,
-    User? user,
-    FirestoreService firestoreService,
-    ProductProvider productProvider) {
+  Widget _buildProductCard(BuildContext context, Product product, User? user,
+      FirestoreService firestoreService, ProductProvider productProvider) {
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
@@ -332,7 +392,8 @@ class _HomePageState extends State<HomePage> {
             Expanded(
               flex: 3,
               child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(16.0)),
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(16.0)),
                 child: Image.network(
                   product.imageUrl,
                   fit: BoxFit.cover,
@@ -372,7 +433,8 @@ class _HomePageState extends State<HomePage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => EditProductPage(product: product),
+                                builder: (context) =>
+                                    EditProductPage(product: product),
                               ),
                             );
                           },
@@ -386,7 +448,8 @@ class _HomePageState extends State<HomePage> {
                         IconButton(
                           icon: const Icon(Icons.add_shopping_cart, size: 20),
                           onPressed: () {
-                            _placeOrder(context, product, user!.uid, firestoreService);
+                            _placeOrder(
+                                context, product, user!.uid, firestoreService);
                           },
                         ),
                       ],
@@ -401,7 +464,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _placeOrder(BuildContext context, Product product, String userId, FirestoreService firestoreService) {
+  void _placeOrder(BuildContext context, Product product, String userId,
+      FirestoreService firestoreService) {
     final orderId = DateTime.now().millisecondsSinceEpoch.toString();
     final newOrder = Order(
       id: orderId,
