@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_with_firebase/order_model.dart';
 import 'package:flutter_with_firebase/product.dart';
@@ -60,7 +61,7 @@ class HomePage extends StatelessWidget {
             },
           ),
           IconButton(
-            icon: const Icon(Icons.history),
+            icon: const Icon(Icons.shopping_cart),
             onPressed: () {
               // Ensure firestoreService is available
               Navigator.push(
@@ -202,6 +203,8 @@ class HomePage extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       fontSize: 16.0,
                     ),
+                    maxLines: 2, // Limit the number of lines for the title
+                    overflow: TextOverflow.ellipsis, // Add ellipsis to indicate overflow
                   ),
                   const SizedBox(height: 4.0),
                   Text(
