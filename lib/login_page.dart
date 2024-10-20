@@ -61,25 +61,33 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 20),
                 TextField(
                   controller: _emailController,
+                  style: TextStyle(color: Colors.black87, fontSize: 16),
                   decoration: InputDecoration(
                     labelText: 'Email',
+                    labelStyle: TextStyle(color: Colors.grey[700]),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                       borderSide: BorderSide(color: Colors.grey.shade200),
                     ),
+                    filled: true,
+                    fillColor: Colors.grey[100],
                     prefixIcon: const Icon(Icons.email),
                   ),
                 ),
                 const SizedBox(height: 20),
                 TextField(
                   controller: _passwordController,
-                  obscureText: _obscureText, // Use the variable here
+                  obscureText: _obscureText,
+                  style: TextStyle(color: Colors.black87, fontSize: 16),
                   decoration: InputDecoration(
                     labelText: 'Password',
+                    labelStyle: TextStyle(color: Colors.grey[700]),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                       borderSide: BorderSide(color: Colors.grey.shade200),
                     ),
+                    filled: true,
+                    fillColor: Colors.grey[100],
                     prefixIcon: const Icon(Icons.lock),
                     suffixIcon: IconButton(
                       icon: Icon(_obscureText

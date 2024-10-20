@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_with_firebase/order_model.dart';
 import 'package:flutter_with_firebase/product.dart';
 import 'package:flutter_with_firebase/profile_page.dart';
+import 'package:flutter_with_firebase/theme/theme_provider.dart';
 import 'package:flutter_with_firebase/wishlist.dart';
 import 'package:provider/provider.dart';
 import 'product_provider.dart';
@@ -44,7 +45,13 @@ class _HomePageState extends State<HomePage> {
       );
     }
 
-    return Scaffold(
+return GestureDetector(
+    onTap: () {
+      // This will unfocus the search bar when tapping outside
+      FocusScope.of(context).unfocus();
+    },
+    child: 
+    Scaffold(
       appBar: AppBar(
         title: const Text(
           'Vmerce',
@@ -95,7 +102,7 @@ class _HomePageState extends State<HomePage> {
             },
           ),
           IconButton(
-            icon: const Icon(Icons.shopping_cart, color: Colors.black),
+            icon: const Icon(Icons.receipt_long, color: Colors.black),
             onPressed: () {
               Navigator.push(
                 context,
@@ -141,32 +148,64 @@ class _HomePageState extends State<HomePage> {
                 );
               },
             ),
+            ListTile(
+              leading: const Icon(Icons.brightness_6),
+              title: const Text('Theme'),
+              trailing: Consumer<ThemeProvider>(
+                builder: (context, themeProvider, child) {
+                  return DropdownButton<ThemeMode>(
+                    value: themeProvider.themeMode,
+                    onChanged: (ThemeMode? newThemeMode) {
+                      if (newThemeMode != null) {
+                        themeProvider.setThemeMode(newThemeMode);
+                      }
+                    },
+                    items: const [
+                      DropdownMenuItem(
+                        value: ThemeMode.system,
+                        child: Text('System'),
+                      ),
+                      DropdownMenuItem(
+                        value: ThemeMode.light,
+                        child: Text('Light'),
+                      ),
+                      DropdownMenuItem(
+                        value: ThemeMode.dark,
+                        child: Text('Dark'),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
       body: CustomScrollView(
         slivers: [
-          SliverPadding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            sliver: SliverToBoxAdapter(
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Search for products...',
-                  prefixIcon: const Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25.0),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey[200],
-                ),
-                onChanged: (value) {
-                  productProvider.searchProducts(value);
-                },
-              ),
-            ),
-          ),
+        SliverPadding(
+  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+  sliver: SliverToBoxAdapter(
+    child: TextField(
+      decoration: InputDecoration(
+        hintText: 'Search for products...',
+        prefixIcon: Icon(Icons.search, color: Theme.of(context).iconTheme.color),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(25.0),
+          borderSide: BorderSide(color: Theme.of(context).dividerColor, width: 0.1),
+        ),
+        filled: true,
+        fillColor: Theme.of(context).cardColor,
+        hintStyle: TextStyle(color: Theme.of(context).hintColor),
+      ),
+      style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
+      onChanged: (value) {
+        productProvider.searchProducts(value);
+      },
+    ),
+  ),
+),
+
           SliverToBoxAdapter(
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
@@ -214,9 +253,8 @@ class _HomePageState extends State<HomePage> {
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
-                            color: value == 'None'
-                                ? Colors.black
-                                : Colors.black,
+                            color:
+                                value == 'None' ? Colors.black : Colors.black,
                           ),
                         ),
                       );
@@ -296,89 +334,91 @@ class _HomePageState extends State<HomePage> {
         label: const Text('Add Product'),
         icon: const Icon(Icons.add),
       ),
-    );
+    ),
+  );
+     
   }
 
   Widget _buildHorizontalProductList(
-    BuildContext context, String title, List<Product> products) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text(
-          title,
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      BuildContext context, String title, List<Product> products) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            title,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
         ),
-      ),
-      SizedBox(
-        height: 220,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: products.length,
-          itemBuilder: (context, index) {
-            final product = products[index];
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProductDetailsPage(product),
-                  ),
-                );
-              },
-              child: Container(
-                width: 160,
-                margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                child: Card(
-                  elevation: 2.0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipRRect(
-                        borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(8.0)),
-                        child: Image.network(
-                          product.imageUrl,
-                          height: 120,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
+        SizedBox(
+          height: 220,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: products.length,
+            itemBuilder: (context, index) {
+              final product = products[index];
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProductDetailsPage(product),
+                    ),
+                  );
+                },
+                child: Container(
+                  width: 160,
+                  margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                  child: Card(
+                    elevation: 2.0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(8.0)),
+                          child: Image.network(
+                            product.imageUrl,
+                            height: 120,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              product.name,
-                              style: const TextStyle(fontWeight: FontWeight.bold),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              '\$${product.price.toStringAsFixed(2)}',
-                              style: const TextStyle(color: Colors.green),
-                            ),
-                          ],
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                product.name,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                '\$${product.price.toStringAsFixed(2)}',
+                                style: const TextStyle(color: Colors.green),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
-      ),
-    ],
-  );
-}
-
+      ],
+    );
+  }
 
   Widget _buildProductCard(BuildContext context, Product product, User? user,
       FirestoreService firestoreService, ProductProvider productProvider) {

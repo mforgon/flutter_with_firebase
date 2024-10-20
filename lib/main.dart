@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_with_firebase/firestore_service.dart';
+import 'package:flutter_with_firebase/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'auth_wrapper.dart';
 import 'product_provider.dart';
@@ -41,14 +42,19 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ProductProvider()),
-        Provider(create: (_) => FirestoreService()) // resolve the ProviderNotFoundError
+        Provider(create: (_) => FirestoreService()), // resolve the ProviderNotFoundError
+      ChangeNotifierProvider(create: (_) => ThemeProvider()),
       ],
-      child: MaterialApp(
-        title: 'E-commerce App',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: const AuthWrapper(),
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
+          return MaterialApp(
+            title: 'E-commerce App',
+            theme: ThemeData.light(),
+            darkTheme: ThemeData.dark(),
+            themeMode: themeProvider.themeMode,
+            home: const AuthWrapper(),
+          );
+        },
       ),
     );
   }
