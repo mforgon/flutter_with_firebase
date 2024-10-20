@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_with_firebase/language/app_localizations.dart';
+import 'package:flutter_with_firebase/language/language_provider.dart';
 import 'package:flutter_with_firebase/order_model.dart';
 import 'package:flutter_with_firebase/product.dart';
 import 'package:flutter_with_firebase/profile_page.dart';
@@ -35,6 +37,7 @@ class _HomePageState extends State<HomePage> {
     final productProvider = Provider.of<ProductProvider>(context);
     final firestoreService = Provider.of<FirestoreService>(context);
     final user = FirebaseAuth.instance.currentUser;
+    final languageProvider = Provider.of<LanguageProvider>(context);
 
     if (user == null) {
       return Scaffold(
@@ -45,298 +48,324 @@ class _HomePageState extends State<HomePage> {
       );
     }
 
-return GestureDetector(
-    onTap: () {
-      // This will unfocus the search bar when tapping outside
-      FocusScope.of(context).unfocus();
-    },
-    child: 
-    Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Vmerce',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 24.0,
+    return GestureDetector(
+      onTap: () {
+        // This will unfocus the search bar when tapping outside
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            AppLocalizations.of(context).appTitle,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 24.0,
+            ),
           ),
-        ),
-        centerTitle: true,
-        elevation: 0.0,
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        actions: [
-          IconButton(
-            icon: Stack(
-              children: [
-                const Icon(Icons.favorite, color: Colors.redAccent),
-                Positioned(
-                  right: 0,
-                  top: 0,
-                  child: Container(
-                    padding: const EdgeInsets.all(1),
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    constraints: const BoxConstraints(
-                      minWidth: 12,
-                      minHeight: 12,
-                    ),
-                    child: Text(
-                      '${productProvider.wishlist.length}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 8,
+          centerTitle: true,
+          elevation: 0.0,
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
+          actions: [
+            IconButton(
+              icon: Stack(
+                children: [
+                  const Icon(Icons.favorite, color: Colors.redAccent),
+                  Positioned(
+                    right: 0,
+                    top: 0,
+                    child: Container(
+                      padding: const EdgeInsets.all(1),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(6),
                       ),
-                      textAlign: TextAlign.center,
+                      constraints: const BoxConstraints(
+                        minWidth: 12,
+                        minHeight: 12,
+                      ),
+                      child: Text(
+                        '${productProvider.wishlist.length}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 8,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                  ),
-                )
-              ],
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const WishlistPage()),
-              );
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.receipt_long, color: Colors.black),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const OrderHistoryPage()),
-              );
-            },
-          ),
-        ],
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            UserAccountsDrawerHeader(
-              decoration: const BoxDecoration(color: Colors.blueAccent),
-              accountName: Text(user.displayName ?? 'User'),
-              accountEmail: Text(user.email ?? ''),
-              currentAccountPicture: const CircleAvatar(
-                backgroundColor: Colors.white,
-                child: Icon(Icons.person, size: 50, color: Colors.blueAccent),
+                  )
+                ],
               ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.person),
-              title: const Text('Profile'),
-              onTap: () {
-                Navigator.pop(context);
+              onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const ProfilePage()),
+                  MaterialPageRoute(builder: (context) => const WishlistPage()),
                 );
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text('Sign Out'),
-              onTap: () async {
-                await FirebaseAuth.instance.signOut();
-                Navigator.pushReplacement(
+            IconButton(
+              icon: const Icon(Icons.receipt_long, color: Colors.black),
+              onPressed: () {
+                Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const LoginPage()),
+                  MaterialPageRoute(
+                      builder: (context) => const OrderHistoryPage()),
                 );
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.brightness_6),
-              title: const Text('Theme'),
-              trailing: Consumer<ThemeProvider>(
-                builder: (context, themeProvider, child) {
-                  return DropdownButton<ThemeMode>(
-                    value: themeProvider.themeMode,
-                    onChanged: (ThemeMode? newThemeMode) {
-                      if (newThemeMode != null) {
-                        themeProvider.setThemeMode(newThemeMode);
-                      }
-                    },
-                    items: const [
-                      DropdownMenuItem(
-                        value: ThemeMode.system,
-                        child: Text('System'),
-                      ),
-                      DropdownMenuItem(
-                        value: ThemeMode.light,
-                        child: Text('Light'),
-                      ),
-                      DropdownMenuItem(
-                        value: ThemeMode.dark,
-                        child: Text('Dark'),
-                      ),
-                    ],
+          ],
+        ),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              UserAccountsDrawerHeader(
+                decoration:
+                    BoxDecoration(color: Theme.of(context).primaryColor),
+                accountName: Text(user.displayName ?? 'User'),
+                accountEmail: Text(user.email ?? ''),
+                currentAccountPicture: const CircleAvatar(
+                  backgroundColor: Colors.white,
+                  child: Icon(Icons.person, size: 50, color: Colors.blueAccent),
+                ),
+              ),
+              ListTile(
+                leading: const Icon(Icons.person),
+                title: const Text('Profile'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ProfilePage()),
                   );
                 },
+              ),
+              ListTile(
+                leading: const Icon(Icons.logout),
+                title: const Text('Sign Out'),
+                onTap: () async {
+                  await FirebaseAuth.instance.signOut();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.brightness_6),
+                title: const Text('Theme'),
+                trailing: Consumer<ThemeProvider>(
+                  builder: (context, themeProvider, child) {
+                    return DropdownButton<ThemeMode>(
+                      value: themeProvider.themeMode,
+                      onChanged: (ThemeMode? newThemeMode) {
+                        if (newThemeMode != null) {
+                          themeProvider.setThemeMode(newThemeMode);
+                        }
+                      },
+                      items: const [
+                        DropdownMenuItem(
+                          value: ThemeMode.system,
+                          child: Text('System'),
+                        ),
+                        DropdownMenuItem(
+                          value: ThemeMode.light,
+                          child: Text('Light'),
+                        ),
+                        DropdownMenuItem(
+                          value: ThemeMode.dark,
+                          child: Text('Dark'),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+              ListTile(
+  leading: const Icon(Icons.language),
+  title: Text(AppLocalizations.of(context).language),
+  trailing: Consumer<LanguageProvider>(
+    builder: (context, languageProvider, child) {
+      return DropdownButton<String>(
+        value: languageProvider.locale.languageCode,
+        onChanged: (String? newValue) {
+          if (newValue != null) {
+            languageProvider.setLocale(Locale(newValue));
+          }
+        },
+        items: const [
+          DropdownMenuItem(value: 'km', child: Text('ខ្មែរ')),
+          DropdownMenuItem(value: 'en', child: Text('English')),
+          DropdownMenuItem(value: 'zh', child: Text('中文')),
+        ],
+      );
+    },
+  ),
+),
+            ],
+          ),
+        ),
+        body: CustomScrollView(
+          slivers: [
+            SliverPadding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              sliver: SliverToBoxAdapter(
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: AppLocalizations.of(context).searchHint,
+                    prefixIcon: Icon(Icons.search,
+                        color: Theme.of(context).iconTheme.color),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                      borderSide: BorderSide(
+                          color: Theme.of(context).dividerColor, width: 0.1),
+                    ),
+                    filled: true,
+                    fillColor: Theme.of(context).cardColor,
+                    hintStyle: TextStyle(color: Theme.of(context).hintColor),
+                  ),
+                  style: TextStyle(
+                      color: Theme.of(context).textTheme.bodyLarge?.color),
+                  onChanged: (value) {
+                    productProvider.searchProducts(value);
+                  },
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: _categories.map((category) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      child: ChoiceChip(
+                        label: Text(category),
+                        selected: _selectedCategory == category,
+                        onSelected: (selected) {
+                          setState(() {
+                            _selectedCategory = category;
+                          });
+                          productProvider.filterProductsByCategory(category);
+                        },
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      AppLocalizations.of(context).sortByPrice,
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                    ),
+                    DropdownButton<String>(
+                      value: _priceSort,
+                      items: <String>[
+                        'None',
+                        'Lowest to Highest',
+                        'Highest to Lowest'
+                      ].map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(
+                            value,
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              color:
+                                  value == 'None' ? Colors.black : Colors.black,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _priceSort = newValue!;
+                        });
+                        if (newValue == 'Lowest to Highest') {
+                          productProvider.sortProductsByPrice(true);
+                        } else if (newValue == 'Highest to Lowest') {
+                          productProvider.sortProductsByPrice(false);
+                        }
+                      },
+                      style:
+                          const TextStyle(fontSize: 12, color: Colors.black87),
+                      underline: Container(
+                        height: 1,
+                        color: Colors.grey[300],
+                      ),
+                      icon: const Icon(Icons.arrow_drop_down, size: 20),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: _buildHorizontalProductList(
+                context,
+                AppLocalizations.of(context).recommendedForYou,
+                productProvider.getRecommendedProducts(),
+              ),
+            ),
+            SliverPadding(
+              padding: const EdgeInsets.all(8.0),
+              sliver: SliverList(
+                delegate: SliverChildListDelegate(
+                  [
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        AppLocalizations.of(context).allProducts,
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      padding: const EdgeInsets.all(8.0),
+                      itemCount: productProvider.filteredProducts.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 0.5,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                      ),
+                      itemBuilder: (context, index) {
+                        final product = productProvider.filteredProducts[index];
+                        return _buildProductCard(context, product, user,
+                            firestoreService, productProvider);
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
         ),
-      ),
-      body: CustomScrollView(
-        slivers: [
-        SliverPadding(
-  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-  sliver: SliverToBoxAdapter(
-    child: TextField(
-      decoration: InputDecoration(
-        hintText: 'Search for products...',
-        prefixIcon: Icon(Icons.search, color: Theme.of(context).iconTheme.color),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(25.0),
-          borderSide: BorderSide(color: Theme.of(context).dividerColor, width: 0.1),
-        ),
-        filled: true,
-        fillColor: Theme.of(context).cardColor,
-        hintStyle: TextStyle(color: Theme.of(context).hintColor),
-      ),
-      style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
-      onChanged: (value) {
-        productProvider.searchProducts(value);
-      },
-    ),
-  ),
-),
-
-          SliverToBoxAdapter(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: _categories.map((category) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                    child: ChoiceChip(
-                      label: Text(category),
-                      selected: _selectedCategory == category,
-                      onSelected: (selected) {
-                        setState(() {
-                          _selectedCategory = category;
-                        });
-                        productProvider.filterProductsByCategory(category);
-                      },
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Sort by Price:',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                  ),
-                  DropdownButton<String>(
-                    value: _priceSort,
-                    items: <String>[
-                      'None',
-                      'Lowest to Highest',
-                      'Highest to Lowest'
-                    ].map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(
-                          value,
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            color:
-                                value == 'None' ? Colors.black : Colors.black,
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _priceSort = newValue!;
-                      });
-                      if (newValue == 'Lowest to Highest') {
-                        productProvider.sortProductsByPrice(true);
-                      } else if (newValue == 'Highest to Lowest') {
-                        productProvider.sortProductsByPrice(false);
-                      }
-                    },
-                    style: const TextStyle(fontSize: 12, color: Colors.black87),
-                    underline: Container(
-                      height: 1,
-                      color: Colors.grey[300],
-                    ),
-                    icon: const Icon(Icons.arrow_drop_down, size: 20),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: _buildHorizontalProductList(
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.push(
               context,
-              'Recommended for You',
-              productProvider.getRecommendedProducts(),
-            ),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.all(8.0),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      'All Products',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    padding: const EdgeInsets.all(8.0),
-                    itemCount: productProvider.filteredProducts.length,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 0.5,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
-                    ),
-                    itemBuilder: (context, index) {
-                      final product = productProvider.filteredProducts[index];
-                      return _buildProductCard(context, product, user,
-                          firestoreService, productProvider);
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
+              MaterialPageRoute(builder: (context) => const EditProductPage()),
+            );
+          },
+          label: const Text('Add Product'),
+          icon: const Icon(Icons.add),
+        ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const EditProductPage()),
-          );
-        },
-        label: const Text('Add Product'),
-        icon: const Icon(Icons.add),
-      ),
-    ),
-  );
-     
+    );
   }
 
   Widget _buildHorizontalProductList(
