@@ -300,26 +300,35 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildHorizontalProductList(
-      BuildContext context, String title, List<Product> products) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            title,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
+    BuildContext context, String title, List<Product> products) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(
+          title,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
-        SizedBox(
-          height: 220, // Increased height to accommodate content
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: products.length,
-            itemBuilder: (context, index) {
-              final product = products[index];
-              return Container(
-                width: 160, // Increased width for better layout
+      ),
+      SizedBox(
+        height: 220,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: products.length,
+          itemBuilder: (context, index) {
+            final product = products[index];
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProductDetailsPage(product),
+                  ),
+                );
+              },
+              child: Container(
+                width: 160,
                 margin: const EdgeInsets.symmetric(horizontal: 4.0),
                 child: Card(
                   elevation: 2.0,
@@ -346,8 +355,7 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             Text(
                               product.name,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
+                              style: const TextStyle(fontWeight: FontWeight.bold),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -362,13 +370,15 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
+}
+
 
   Widget _buildProductCard(BuildContext context, Product product, User? user,
       FirestoreService firestoreService, ProductProvider productProvider) {
