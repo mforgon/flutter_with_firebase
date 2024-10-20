@@ -38,7 +38,7 @@ class HomePage extends StatelessWidget {
     if (user == null) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text('VJmerce Home'),
+          title: const Text('Vmerce Home'),
         ),
         body: const Center(child: Text('Please log in')),
       );
@@ -47,7 +47,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'VJmerce',
+          'Vmerce',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 24.0,
@@ -200,9 +200,9 @@ class HomePage extends StatelessWidget {
               itemCount: productProvider.filteredProducts.length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                childAspectRatio: 0.75,
-                crossAxisSpacing: 16.0,
-                mainAxisSpacing: 16.0,
+                childAspectRatio: 0.5,
+                crossAxisSpacing:4.0,
+                mainAxisSpacing: 4,
               ),
               itemBuilder: (context, index) {
                 final product = productProvider.filteredProducts[index];
@@ -233,67 +233,74 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
-
   Widget _buildProductCard(
-      BuildContext context,
-      Product product,
-      User? user,
-      FirestoreService firestoreService,
-      ProductProvider productProvider) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0),
-      ),
-      elevation: 2.0,
-      child: InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ProductDetailsPage(product),
-            ),
-          );
-        },
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(16.0)),
-                child: Image.network(
-                  product.imageUrl,
-                  fit: BoxFit.cover,
-                ),
+    BuildContext context,
+    Product product,
+    User? user,
+    FirestoreService firestoreService,
+    ProductProvider productProvider) {
+  return Card(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(16.0),
+    ),
+    elevation: 2.0,
+    child: InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProductDetailsPage(product),
+          ),
+        );
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            flex: 3,
+            child: ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(16.0)),
+              child: Image.network(
+                product.imageUrl,
+                fit: BoxFit.contain,
               ),
             ),
-            Padding(
+          ),
+          Expanded(
+            flex: 2,
+            child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    product.name,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16.0,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        product.name,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.0,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 4.0),
+                      Text(
+                        '\$${product.price.toStringAsFixed(2)}',
+                        style: const TextStyle(
+                          color: Colors.green,
+                          fontSize: 12.0,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 4.0),
-                  Text(
-                    '\$${product.price.toStringAsFixed(2)}',
-                    style: const TextStyle(
-                      color: Colors.green,
-                      fontSize: 14.0,
-                    ),
-                  ),
-                  const SizedBox(height: 8.0),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.edit),
+                        icon: const Icon(Icons.edit, size: 20),
                         onPressed: () {
                           Navigator.push(
                             context,
@@ -305,13 +312,13 @@ class HomePage extends StatelessWidget {
                         },
                       ),
                       IconButton(
-                        icon: const Icon(Icons.delete),
+                        icon: const Icon(Icons.delete, size: 20),
                         onPressed: () {
                           productProvider.deleteProduct(product.id);
                         },
                       ),
                       IconButton(
-                        icon: const Icon(Icons.add_shopping_cart),
+                        icon: const Icon(Icons.add_shopping_cart, size: 20),
                         onPressed: () {
                           _placeOrder(
                               context, product, user!.uid, firestoreService);
@@ -322,13 +329,13 @@ class HomePage extends StatelessWidget {
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
-
-  void _placeOrder(BuildContext context, Product product, String userId,
+    ),
+  );
+}
+    void _placeOrder(BuildContext context, Product product, String userId,
       FirestoreService firestoreService) {
     final orderId = DateTime.now().millisecondsSinceEpoch.toString();
     final newOrder = Order(
