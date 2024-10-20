@@ -83,7 +83,7 @@ class HomePage extends StatelessWidget {
               // Ensure firestoreService is available
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => OrderHistoryPage()),
+                MaterialPageRoute(builder: (context) => const OrderHistoryPage()),
               );
             },
           ),
