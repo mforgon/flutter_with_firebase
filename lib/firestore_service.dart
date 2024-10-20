@@ -1,10 +1,31 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_with_firebase/fake_product_model.dart';
 import 'package:flutter_with_firebase/product_review.dart';
 import 'order_model.dart' as model;
 import 'product.dart';
+import 'package:http/http.dart' as http;
 
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+
+
+
+  Future<void> fetchAndSaveProductsFromApi() async {
+    final response = await http.get(Uri.parse('https://fakestoreapi.com/products'));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> productsJson = jsonDecode(response.body);
+      for (var productJson in productsJson) {
+        final fakeProduct = FakeProduct.fromJson(productJson);
+        final product = Product.fromFakeProduct(fakeProduct);
+        await addProduct(product); 
+      }
+    } else {
+      throw Exception('Failed to load products from API');
+    }
+  }
 
 Stream<List<model.Order>> getOrders(String userId) {
     return _db

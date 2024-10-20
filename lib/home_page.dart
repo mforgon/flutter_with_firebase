@@ -38,13 +38,7 @@ class HomePage extends StatelessWidget {
     if (user == null) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text('E-commerce Home'),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.logout),
-              onPressed: () => _signOut(context),
-            ),
-          ],
+          title: const Text('VJmerce Home'),
         ),
         body: const Center(child: Text('Please log in')),
       );
@@ -52,30 +46,18 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('E-commerce Home'),
+        title: const Text('VJmerce Home'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add),
+            icon: const Icon(Icons.favorite), // Wishlist button
             onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const EditProductPage()),
+                    builder: (context) =>
+                    const WishlistPage()), // Navigate to WishlistPage
               );
             },
-          ),
-          IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ProfilePage()),
-              );
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () => _signOut(context),
           ),
           IconButton(
             icon: const Icon(Icons.history),
@@ -87,27 +69,59 @@ class HomePage extends StatelessWidget {
               );
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.favorite), // Wishlist button
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        const WishlistPage()), // Navigate to WishlistPage
-              );
-            },
-          ),
+
         ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: const BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text(
+                'Hello, ${user.email ?? 'User'}',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.person),
+              title: const Text('Profile'),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ProfilePage()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Sign Out'),
+              onTap: () => _signOut(context),
+            ),
+          ],
+        ),
       ),
       body: Column(
         children: [
+          // Search Bar
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(16.0),
             child: TextField(
-              decoration: const InputDecoration(
-                labelText: 'Search',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                hintText: 'Search for products...',
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                  borderSide: BorderSide.none,
+                ),
+                filled: true,
+                fillColor: Colors.grey[200],
               ),
               onChanged: (value) {
                 productProvider.searchProducts(value);
@@ -116,94 +130,123 @@ class HomePage extends StatelessWidget {
           ),
           Expanded(
             child: GridView.builder(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(16.0),
               itemCount: productProvider.filteredProducts.length,
-              itemBuilder: (ctx, i) => GestureDetector(
-                onTap: () {
-                  final product = productProvider.filteredProducts[i];
-                  if (product.id.isEmpty) {
-                    print('Product ID is empty');
-                    return;
-                  }
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProductDetailsPage(product),
-                    ),
-                  );
-                },
-                child: GridTile(
-                  footer: GridTileBar(
-                    backgroundColor: Colors.black87,
-                    title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          productProvider.filteredProducts[i].name,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                        Text(
-                          '\$${productProvider.filteredProducts[i].price.toStringAsFixed(2)}',
-                          style: const TextStyle(
-                            color: Colors.green,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.edit),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EditProductPage(
-                                    product:
-                                        productProvider.filteredProducts[i]),
-                              ),
-                            );
-                          },
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () {
-                            productProvider.deleteProduct(
-                                productProvider.filteredProducts[i].id);
-                          },
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.add_shopping_cart),
-                          onPressed: () {
-                            _placeOrder(
-                                context,
-                                productProvider.filteredProducts[i],
-                                user.uid,
-                                firestoreService);
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  child: Image.network(
-                      productProvider.filteredProducts[i].imageUrl,
-                      fit: BoxFit.cover),
-                ),
-              ),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                childAspectRatio: 3 / 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
+                childAspectRatio: 0.75,
+                crossAxisSpacing: 16.0,
+                mainAxisSpacing: 16.0,
               ),
+              itemBuilder: (context, index) {
+                final product = productProvider.filteredProducts[index];
+                return _buildProductCard(
+                    context, product, user, firestoreService, productProvider);
+              },
             ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const EditProductPage(),
+            ),
+          );
+        },
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  Widget _buildProductCard(
+      BuildContext context,
+      Product product,
+      User? user,
+      FirestoreService firestoreService,
+      ProductProvider productProvider) {
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16.0),
+      ),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProductDetailsPage(product),
+            ),
+          );
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: Image.network(
+                product.imageUrl,
+                height: 150,
+                fit: BoxFit.cover,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    product.name,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                  const SizedBox(height: 4.0),
+                  Text(
+                    '\$${product.price.toStringAsFixed(2)}',
+                    style: const TextStyle(
+                      color: Colors.green,
+                      fontSize: 14.0,
+                    ),
+                  ),
+                  const SizedBox(height: 8.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.edit),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  EditProductPage(product: product),
+                            ),
+                          );
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () {
+                          productProvider.deleteProduct(product.id);
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.add_shopping_cart),
+                        onPressed: () {
+                          _placeOrder(
+                              context, product, user!.uid, firestoreService);
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

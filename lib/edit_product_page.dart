@@ -15,22 +15,39 @@ class EditProductPage extends StatefulWidget {
 
 class _EditProductPageState extends State<EditProductPage> {
   final _formKey = GlobalKey<FormState>();
-  late String _name;
-  late String _imageUrl;
-  late double _price;
+  late TextEditingController _nameController;
+  late TextEditingController _imageUrlController;
+  late TextEditingController _priceController;
+  late TextEditingController _descriptionController;
+  late TextEditingController _categoryController;
 
   @override
   void initState() {
     super.initState();
-    if (widget.product != null) {
-      _name = widget.product!.name;
-      _imageUrl = widget.product!.imageUrl;
-      _price = widget.product!.price;
-    } else {
-      _name = '';
-      _imageUrl = '';
-      _price = 0.0;
-    }
+
+    // Initialize text editing controllers
+    _nameController = TextEditingController(text: widget.product?.name ?? '');
+    _imageUrlController =
+        TextEditingController(text: widget.product?.imageUrl ?? '');
+    _priceController = TextEditingController(
+        text: widget.product?.price != null
+            ? widget.product!.price.toStringAsFixed(2)
+            : '');
+    _descriptionController =
+        TextEditingController(text: widget.product?.description ?? '');
+    _categoryController =
+        TextEditingController(text: widget.product?.category ?? '');
+  }
+
+  @override
+  void dispose() {
+    // Dispose the controllers when the widget is disposed
+    _nameController.dispose();
+    _imageUrlController.dispose();
+    _priceController.dispose();
+    _descriptionController.dispose();
+    _categoryController.dispose();
+    super.dispose();
   }
 
   @override
@@ -48,9 +65,11 @@ class _EditProductPageState extends State<EditProductPage> {
                 _formKey.currentState!.save();
                 final product = Product(
                   id: widget.product?.id ?? '',
-                  name: _name,
-                  imageUrl: _imageUrl,
-                  price: _price,
+                  name: _nameController.text,
+                  imageUrl: _imageUrlController.text,
+                  price: double.tryParse(_priceController.text) ?? 0.0,
+                  description: _descriptionController.text,
+                  category: _categoryController.text,
                 );
                 if (widget.product == null) {
                   productProvider.addProduct(product);
@@ -67,49 +86,66 @@ class _EditProductPageState extends State<EditProductPage> {
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                initialValue: _name,
-                decoration: const InputDecoration(labelText: 'Name'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a name';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _name = value!;
-                },
-              ),
-              TextFormField(
-                initialValue: _imageUrl,
-                decoration: const InputDecoration(labelText: 'Image URL'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter an image URL';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _imageUrl = value!;
-                },
-              ),
-              TextFormField(
-                initialValue: _price.toString(),
-                decoration: const InputDecoration(labelText: 'Price'),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a price';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _price = double.parse(value!);
-                },
-              ),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: _nameController,
+                  decoration: const InputDecoration(labelText: 'Name'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a name';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _imageUrlController,
+                  decoration: const InputDecoration(labelText: 'Image URL'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter an image URL';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _priceController,
+                  decoration: const InputDecoration(labelText: 'Price'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a price';
+                    }
+                    if (double.tryParse(value) == null) {
+                      return 'Please enter a valid number';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _descriptionController,
+                  decoration: const InputDecoration(labelText: 'Description'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a description';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _categoryController,
+                  decoration: const InputDecoration(labelText: 'Category'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a category';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16.0),
+              ],
+            ),
           ),
         ),
       ),
