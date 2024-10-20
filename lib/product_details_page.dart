@@ -1,4 +1,3 @@
-// product_details_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_with_firebase/add_review_page.dart';
 import 'package:flutter_with_firebase/product_review.dart';
@@ -10,8 +9,9 @@ import 'firestore_service.dart';
 class ProductDetailsPage extends StatelessWidget {
   final Product product;
 
-  ProductDetailsPage(this.product, {super.key})
-      : assert(product.id.isNotEmpty, 'Product ID cannot be empty');
+  ProductDetailsPage(this.product, {Key? key})
+      : assert(product.id.isNotEmpty, 'Product ID cannot be empty'),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,62 +19,136 @@ class ProductDetailsPage extends StatelessWidget {
     final firestoreService = Provider.of<FirestoreService>(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(product.name),
-      ),
-      body: Column(
-        children: [
-          Image.network(product.imageUrl),
-          Text(product.name), // Removed const
-          Text('\$${product.price.toStringAsFixed(2)}'), // Removed const
-          ElevatedButton(
-            onPressed: () {
-              // Add the product to the wishlist
-              Provider.of<ProductProvider>(context, listen: false)
-                  .addToWishlist(product);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('${product.name} added to wishlist!')),
-              );
-            },
-            child: const Text('Add to Wishlist'),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 300,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Hero(
+                tag: 'product-${product.id}',
+                child: Image.network(
+                  product.imageUrl,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
           ),
-          Expanded(
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    product.name,
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    '\$${product.price.toStringAsFixed(2)}',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: Colors.green,
+                        ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Description',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    product.description,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Category: ${product.category}',
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      Provider.of<ProductProvider>(context, listen: false)
+                          .addToWishlist(product);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('${product.name} added to wishlist!')),
+                      );
+                    },
+                    icon: const Icon(Icons.favorite),
+                    label: const Text('Add to Wishlist', ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      foregroundColor: Colors.white, 
+                      minimumSize: const Size(double.infinity, 50),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Text(
+                    'Reviews',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
             child: StreamBuilder<List<Review>>(
               stream: firestoreService.getReviews(product.id),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
+                  return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasData) {
                   final reviews = snapshot.data!;
                   return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: reviews.length,
                     itemBuilder: (context, index) {
                       final review = reviews[index];
                       return ListTile(
+                        leading: CircleAvatar(
+                          child: Text(review.userName[0]),
+                        ),
                         title: Text(review.userName),
                         subtitle: Text(review.comment),
-                        trailing: Text(review.rating.toString()),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.star, color: Colors.amber),
+                            Text(review.rating.toString()),
+                          ],
+                        ),
                       );
                     },
                   );
                 } else {
-                  return const Text('No reviews yet');
+                  return const Center(child: Text('No reviews yet'));
                 }
               },
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AddReviewPage(product: product),
-                  ),
-                );
-              },
-              child: const Text('Add Review'),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AddReviewPage(product: product),
+                    ),
+                  );
+                },
+                child: const Text('Add Review'),
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 50),
+                ),
+              ),
             ),
           ),
         ],
