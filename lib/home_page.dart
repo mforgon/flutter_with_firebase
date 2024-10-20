@@ -24,14 +24,24 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String _selectedCategory = 'All';
-  List<String> _categories = [
-    "All",
-    "electronics",
-    "jewelery",
-    "men's clothing",
-    "women's clothing"
-  ];
-  String _priceSort = 'None';
+  List<String> _categories = [];
+  String _priceSort = "";
+
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _categories = [
+      AppLocalizations.of(context).allCategory,
+      AppLocalizations.of(context).electronicsCategory,
+      AppLocalizations.of(context).jeweleryCategory,
+      AppLocalizations.of(context).mensClothingCategory,
+      AppLocalizations.of(context).womensClothingCategory,
+    ];
+    _priceSort = AppLocalizations.of(context).noneSort;
+
+  }
+
   @override
   Widget build(BuildContext context) {
     final productProvider = Provider.of<ProductProvider>(context);
@@ -131,7 +141,7 @@ class _HomePageState extends State<HomePage> {
               ),
               ListTile(
                 leading: const Icon(Icons.person),
-                title: const Text('Profile'),
+                title: Text(AppLocalizations.of(context).profile),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.push(
@@ -143,7 +153,7 @@ class _HomePageState extends State<HomePage> {
               ),
               ListTile(
                 leading: const Icon(Icons.logout),
-                title: const Text('Sign Out'),
+                title: Text(AppLocalizations.of(context).signOut),
                 onTap: () async {
                   await FirebaseAuth.instance.signOut();
                   Navigator.pushReplacement(
@@ -154,7 +164,7 @@ class _HomePageState extends State<HomePage> {
               ),
               ListTile(
                 leading: const Icon(Icons.brightness_6),
-                title: const Text('Theme'),
+                title: Text(AppLocalizations.of(context).theme),
                 trailing: Consumer<ThemeProvider>(
                   builder: (context, themeProvider, child) {
                     return DropdownButton<ThemeMode>(
@@ -164,18 +174,18 @@ class _HomePageState extends State<HomePage> {
                           themeProvider.setThemeMode(newThemeMode);
                         }
                       },
-                      items: const [
+                      items: [
                         DropdownMenuItem(
                           value: ThemeMode.system,
-                          child: Text('System'),
+                          child: Text(AppLocalizations.of(context).systemTheme),
                         ),
                         DropdownMenuItem(
                           value: ThemeMode.light,
-                          child: Text('Light'),
+                          child: Text(AppLocalizations.of(context).lightTheme),
                         ),
                         DropdownMenuItem(
                           value: ThemeMode.dark,
-                          child: Text('Dark'),
+                          child: Text(AppLocalizations.of(context).darkTheme),
                         ),
                       ],
                     );
@@ -183,26 +193,26 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               ListTile(
-  leading: const Icon(Icons.language),
-  title: Text(AppLocalizations.of(context).language),
-  trailing: Consumer<LanguageProvider>(
-    builder: (context, languageProvider, child) {
-      return DropdownButton<String>(
-        value: languageProvider.locale.languageCode,
-        onChanged: (String? newValue) {
-          if (newValue != null) {
-            languageProvider.setLocale(Locale(newValue));
-          }
-        },
-        items: const [
-          DropdownMenuItem(value: 'km', child: Text('ខ្មែរ')),
-          DropdownMenuItem(value: 'en', child: Text('English')),
-          DropdownMenuItem(value: 'zh', child: Text('中文')),
-        ],
-      );
-    },
-  ),
-),
+                leading: const Icon(Icons.language),
+                title: Text(AppLocalizations.of(context).language),
+                trailing: Consumer<LanguageProvider>(
+                  builder: (context, languageProvider, child) {
+                    return DropdownButton<String>(
+                      value: languageProvider.locale.languageCode,
+                      onChanged: (String? newValue) {
+                        if (newValue != null) {
+                          languageProvider.setLocale(Locale(newValue));
+                        }
+                      },
+                      items: const [
+                        DropdownMenuItem(value: 'km', child: Text('ខ្មែរ')),
+                        DropdownMenuItem(value: 'en', child: Text('English')),
+                        DropdownMenuItem(value: 'zh', child: Text('中文')),
+                      ],
+                    );
+                  },
+                ),
+              ),
             ],
           ),
         ),
@@ -271,9 +281,9 @@ class _HomePageState extends State<HomePage> {
                     DropdownButton<String>(
                       value: _priceSort,
                       items: <String>[
-                        'None',
-                        'Lowest to Highest',
-                        'Highest to Lowest'
+                        AppLocalizations.of(context).noneSort,
+                        AppLocalizations.of(context).lowestToHighestSort,
+                        AppLocalizations.of(context).highestToLowestSort,
                       ].map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
@@ -282,8 +292,7 @@ class _HomePageState extends State<HomePage> {
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
-                              color:
-                                  value == 'None' ? Colors.black : Colors.black,
+                              color: Colors.black,
                             ),
                           ),
                         );
@@ -292,9 +301,9 @@ class _HomePageState extends State<HomePage> {
                         setState(() {
                           _priceSort = newValue!;
                         });
-                        if (newValue == 'Lowest to Highest') {
+                        if (newValue == AppLocalizations.of(context).lowestToHighestSort) {
                           productProvider.sortProductsByPrice(true);
-                        } else if (newValue == 'Highest to Lowest') {
+                        } else if (newValue == AppLocalizations.of(context).highestToLowestSort) {
                           productProvider.sortProductsByPrice(false);
                         }
                       },
@@ -361,7 +370,7 @@ class _HomePageState extends State<HomePage> {
               MaterialPageRoute(builder: (context) => const EditProductPage()),
             );
           },
-          label: const Text('Add Product'),
+          label: Text((AppLocalizations.of(context).addProduct)),
           icon: const Icon(Icons.add),
         ),
       ),
