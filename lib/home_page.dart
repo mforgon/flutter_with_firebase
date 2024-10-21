@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage> {
     if (user == null) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text('Vmerce Home'),
+          title: Text(AppLocalizations.of(context).appTitle),
         ),
         body: const Center(child: Text('Please log in')),
       );

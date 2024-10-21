@@ -20,7 +20,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
   void initState() {
     super.initState();
     // Show the splash screen for 3 seconds
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(Duration(seconds: 2), () {
       setState(() {
         _isSplashScreenVisible = false;
       });
