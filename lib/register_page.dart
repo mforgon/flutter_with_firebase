@@ -13,7 +13,8 @@ class _RegisterPageState extends State<RegisterPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  bool _obscureText = true;
+  bool _obscureTextPassword = true;  // Visibility toggle for password
+  bool _obscureTextConfirmPassword = true;  // Visibility toggle for confirm password
 
   Future<void> _register() async {
     if (_passwordController.text != _confirmPasswordController.text) {
@@ -80,7 +81,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 20),
                 TextField(
                   controller: _passwordController,
-                  obscureText: _obscureText,
+                  obscureText: _obscureTextPassword,
                   decoration: InputDecoration(
                     labelText: 'Password',
                     border: OutlineInputBorder(
@@ -89,12 +90,12 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     prefixIcon: const Icon(Icons.lock),
                     suffixIcon: IconButton(
-                      icon: Icon(_obscureText
+                      icon: Icon(_obscureTextPassword
                           ? Icons.visibility_off
                           : Icons.visibility),
                       onPressed: () {
                         setState(() {
-                          _obscureText = !_obscureText;
+                          _obscureTextPassword = !_obscureTextPassword;
                         });
                       },
                     ),
@@ -103,7 +104,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 20),
                 TextField(
                   controller: _confirmPasswordController,
-                  obscureText: _obscureText,
+                  obscureText: _obscureTextConfirmPassword,
                   decoration: InputDecoration(
                     labelText: 'Confirm Password',
                     border: OutlineInputBorder(
@@ -112,12 +113,12 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     prefixIcon: const Icon(Icons.lock),
                     suffixIcon: IconButton(
-                      icon: Icon(_obscureText
+                      icon: Icon(_obscureTextConfirmPassword
                           ? Icons.visibility_off
                           : Icons.visibility),
                       onPressed: () {
                         setState(() {
-                          _obscureText = !_obscureText;
+                          _obscureTextConfirmPassword = !_obscureTextConfirmPassword;
                         });
                       },
                     ),
