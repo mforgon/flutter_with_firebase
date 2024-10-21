@@ -50,7 +50,7 @@ void filterProductsByCategory(String category) {
     if (category == 'All') {
       _filteredProducts = _products;
     } else {
-      _filteredProducts = _products.where((product) => product.category == category).toList();
+      _filteredProducts = _products.where((product) => product.category == category.toLowerCase()).toList();
     }
     notifyListeners();
   }

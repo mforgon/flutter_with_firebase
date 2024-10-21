@@ -7,6 +7,8 @@ import 'package:flutter_with_firebase/profile_page.dart';
 import 'package:flutter_with_firebase/theme/theme_provider.dart';
 import 'package:flutter_with_firebase/wishlist.dart';
 import 'package:provider/provider.dart';
+import 'about_us_page.dart';
+import 'navigation_widget/common_bottom_navigationbar.dart';
 import 'product_provider.dart';
 import 'product_details_page.dart';
 import 'edit_product_page.dart';
@@ -26,6 +28,24 @@ class _HomePageState extends State<HomePage> {
   String _selectedCategory = 'All';
   List<String> _categories = [];
   String _priceSort = "";
+  int _selectedIndex = 0;
+
+  // List of pages to navigate to
+  final List<Widget> _pages = [
+    const HomePage(),
+    const ProfilePage(),
+    AboutUsPage(),
+  ];
+
+  void _onItemTapped(int index) {
+  setState(() {
+    _selectedIndex = index;
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => _pages[index]),
+    );
+  });
+}
 
 
   @override
@@ -39,7 +59,13 @@ class _HomePageState extends State<HomePage> {
       AppLocalizations.of(context).womensClothingCategory,
     ];
     _priceSort = AppLocalizations.of(context).noneSort;
+  }
 
+  void _navigateToAboutUsPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AboutUsPage()),
+    );
   }
 
   @override
@@ -163,6 +189,17 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
               ListTile(
+                leading: const Icon(Icons.info),
+                title: Text('About Us'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AboutUsPage()),
+                  );
+                },
+              ),
+              ListTile(
                 leading: const Icon(Icons.brightness_6),
                 title: Text(AppLocalizations.of(context).theme),
                 trailing: Consumer<ThemeProvider>(
@@ -276,7 +313,7 @@ class _HomePageState extends State<HomePage> {
                     Text(
                       AppLocalizations.of(context).sortByPrice,
                       style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                          const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                     ),
                     DropdownButton<String>(
                       value: _priceSort,
@@ -289,7 +326,7 @@ class _HomePageState extends State<HomePage> {
                           value: value,
                           child: Text(
                             value,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
                               color: Colors.black,
@@ -298,13 +335,20 @@ class _HomePageState extends State<HomePage> {
                         );
                       }).toList(),
                       onChanged: (String? newValue) {
-                        setState(() {
-                          _priceSort = newValue!;
-                        });
-                        if (newValue == AppLocalizations.of(context).lowestToHighestSort) {
-                          productProvider.sortProductsByPrice(true);
-                        } else if (newValue == AppLocalizations.of(context).highestToLowestSort) {
-                          productProvider.sortProductsByPrice(false);
+                        if (newValue != null) {
+                          setState(() {
+                            _priceSort =
+                                newValue; // Update the _priceSort variable
+                          });
+                          if (newValue ==
+                              AppLocalizations.of(context)
+                                  .lowestToHighestSort) {
+                            productProvider.sortProductsByPrice(true);
+                          } else if (newValue ==
+                              AppLocalizations.of(context)
+                                  .highestToLowestSort) {
+                            productProvider.sortProductsByPrice(false);
+                          }
                         }
                       },
                       style:
@@ -373,6 +417,10 @@ class _HomePageState extends State<HomePage> {
           label: Text((AppLocalizations.of(context).addProduct)),
           icon: const Icon(Icons.add),
         ),
+        bottomNavigationBar: CommonBottomNavigationBar(
+        selectedIndex: _selectedIndex,
+        onItemTapped: _onItemTapped,
+      ),
       ),
     );
   }
@@ -569,7 +617,7 @@ class _HomePageState extends State<HomePage> {
       );
     }).catchError((error) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error placingerror')),
+        SnackBar(content: Text('Error placing order')),
       );
     });
   }
