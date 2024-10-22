@@ -38,15 +38,14 @@ class _HomePageState extends State<HomePage> {
   ];
 
   void _onItemTapped(int index) {
-  setState(() {
-    _selectedIndex = index;
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => _pages[index]),
-    );
-  });
-}
-
+    setState(() {
+      _selectedIndex = index;
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => _pages[index]),
+      );
+    });
+  }
 
   @override
   void didChangeDependencies() {
@@ -74,11 +73,15 @@ class _HomePageState extends State<HomePage> {
     final firestoreService = Provider.of<FirestoreService>(context);
     final user = FirebaseAuth.instance.currentUser;
     final languageProvider = Provider.of<LanguageProvider>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context);
 
     if (user == null) {
       return Scaffold(
         appBar: AppBar(
           title: Text(AppLocalizations.of(context).appTitle),
+          backgroundColor: themeProvider.themeMode == ThemeMode.dark
+              ? Colors.black
+              : Colors.white,
         ),
         body: const Center(child: Text('Please log in')),
       );
@@ -100,8 +103,12 @@ class _HomePageState extends State<HomePage> {
           ),
           centerTitle: true,
           elevation: 0.0,
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
+          backgroundColor: themeProvider.themeMode == ThemeMode.dark
+              ? Colors.black
+              : Colors.white,
+          foregroundColor: themeProvider.themeMode == ThemeMode.dark
+              ? Colors.white
+              : Colors.black,
           actions: [
             IconButton(
               icon: Stack(
@@ -140,7 +147,9 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             IconButton(
-              icon: const Icon(Icons.receipt_long, color: Colors.black),
+              icon: Icon(Icons.receipt_long, color: themeProvider.themeMode == ThemeMode.dark
+              ? Colors.white
+              : Colors.black),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -312,8 +321,8 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Text(
                       AppLocalizations.of(context).sortByPrice,
-                      style:
-                          const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                      style: const TextStyle(
+                          fontSize: 14, fontWeight: FontWeight.w500),
                     ),
                     DropdownButton<String>(
                       value: _priceSort,
@@ -418,9 +427,9 @@ class _HomePageState extends State<HomePage> {
           icon: const Icon(Icons.add),
         ),
         bottomNavigationBar: CommonBottomNavigationBar(
-        selectedIndex: _selectedIndex,
-        onItemTapped: _onItemTapped,
-      ),
+          selectedIndex: _selectedIndex,
+          onItemTapped: _onItemTapped,
+        ),
       ),
     );
   }
