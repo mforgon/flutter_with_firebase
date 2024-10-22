@@ -72,7 +72,6 @@ class _HomePageState extends State<HomePage> {
     final productProvider = Provider.of<ProductProvider>(context);
     final firestoreService = Provider.of<FirestoreService>(context);
     final user = FirebaseAuth.instance.currentUser;
-    final languageProvider = Provider.of<LanguageProvider>(context);
     final themeProvider = Provider.of<ThemeProvider>(context);
 
     if (user == null) {
