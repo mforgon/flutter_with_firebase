@@ -7,15 +7,19 @@ class ProductProvider with ChangeNotifier {
   List<Product> _products = [];
   List<Product> _filteredProducts = [];
   final List<Product> _wishlist = [];
-
+  List<String> _categories = ['All', 'Electronics', 'Jewelery', 'Men\'s Clothing', 'Women\'s Clothing'];
+  String _selectedCategory = 'All';
+  String _priceSort = 'Default';
 
   List<Product> get products => _products;
   List<Product> get filteredProducts => _filteredProducts;
   List<Product> get wishlist => _wishlist;
+  List<String> get categories => _categories;
+  String get selectedCategory => _selectedCategory;
+  String get priceSort => _priceSort;
 
   ProductProvider() {
     _firestoreService.getProducts().listen(_updateProducts);
-    
   }
 
   void _updateProducts(List<Product> products) {
@@ -45,8 +49,21 @@ class ProductProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void setSelectedCategory(String category) {
+    _selectedCategory = category;
+    filterProductsByCategory(category);
+  }
 
-void filterProductsByCategory(String category) {
+  void setPriceSort(String sortOption) {
+    _priceSort = sortOption;
+    if (sortOption == 'Lowest to Highest') {
+      sortProductsByPrice(true);
+    } else if (sortOption == 'Highest to Lowest') {
+      sortProductsByPrice(false);
+    }
+  }
+
+  void filterProductsByCategory(String category) {
     if (category == 'All') {
       _filteredProducts = _products;
     } else {
@@ -55,39 +72,33 @@ void filterProductsByCategory(String category) {
     notifyListeners();
   }
 
-List<Product> getRecommendedProducts() {
-  List<Product> recommendations = [];
-  Set<String> usedCategories = {};
+  List<Product> getRecommendedProducts() {
+    List<Product> recommendations = [];
+    Set<String> usedCategories = {};
 
-  // Use filtered products instead of all products
-  List<Product> productsToRecommend = _filteredProducts.isNotEmpty ? _filteredProducts : _products;
-  
-  // Shuffle the products to get random recommendations
-  List<Product> shuffledProducts = List.from(productsToRecommend)..shuffle();
+    List<Product> productsToRecommend = _filteredProducts.isNotEmpty ? _filteredProducts : _products;
+    List<Product> shuffledProducts = List.from(productsToRecommend)..shuffle();
 
-  for (Product product in shuffledProducts) {
-    if (!usedCategories.contains(product.category)) {
-      recommendations.add(product);
-      usedCategories.add(product.category);
+    for (Product product in shuffledProducts) {
+      if (!usedCategories.contains(product.category)) {
+        recommendations.add(product);
+        usedCategories.add(product.category);
+      }
+
+      if (recommendations.length == 5 || recommendations.length == productsToRecommend.length) {
+        break;
+      }
     }
 
-    // Stop when we have 5 products or have used all categories
-    if (recommendations.length == 5 || recommendations.length == productsToRecommend.length) {
-      break;
-    }
+    return recommendations;
   }
 
-  return recommendations;
-}
-
-
-void sortProductsByPrice(bool ascending) {
+  void sortProductsByPrice(bool ascending) {
     _filteredProducts.sort((a, b) => ascending
         ? a.price.compareTo(b.price)
         : b.price.compareTo(a.price));
     notifyListeners();
   }
-
 
   Future<void> addProduct(Product product) async {
     await _firestoreService.addProduct(product);
