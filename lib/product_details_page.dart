@@ -9,9 +9,8 @@ import 'firestore_service.dart';
 class ProductDetailsPage extends StatelessWidget {
   final Product product;
 
-  ProductDetailsPage(this.product, {Key? key})
-      : assert(product.id.isNotEmpty, 'Product ID cannot be empty'),
-        super(key: key);
+  ProductDetailsPage(this.product, {super.key})
+      : assert(product.id.isNotEmpty, 'Product ID cannot be empty');
 
   @override
   Widget build(BuildContext context) {
@@ -144,10 +143,10 @@ class ProductDetailsPage extends StatelessWidget {
                     ),
                   );
                 },
-                child: const Text('Add Review'),
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 50),
                 ),
+                child: const Text('Add Review'),
               ),
             ),
           ),

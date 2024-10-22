@@ -20,7 +20,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
   void initState() {
     super.initState();
     // Show the splash screen for 3 seconds
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 2), () {
       setState(() {
         _isSplashScreenVisible = false;
       });
@@ -30,7 +30,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
   @override
   Widget build(BuildContext context) {
     if (_isSplashScreenVisible) {
-      return SplashScreen(); // Show the splash screen
+      return const SplashScreen(); // Show the splash screen
     } else {
       return StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),

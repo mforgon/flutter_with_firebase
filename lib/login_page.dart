@@ -54,14 +54,14 @@ class _LoginPageState extends State<LoginPage> {
                       ..shader = const LinearGradient(
                         colors: [Colors.blueAccent, Colors.purpleAccent],
                       ).createShader(
-                        Rect.fromLTWH(0, 0, 200, 100),
+                        const Rect.fromLTWH(0, 0, 200, 100),
                       ),
                   ),
                 ),
                 const SizedBox(height: 20),
                 TextField(
                   controller: _emailController,
-                  style: TextStyle(color: Colors.black87, fontSize: 16),
+                  style: const TextStyle(color: Colors.black87, fontSize: 16),
                   decoration: InputDecoration(
                     labelText: 'Email',
                     labelStyle: TextStyle(color: Colors.grey[700]),
@@ -78,7 +78,7 @@ class _LoginPageState extends State<LoginPage> {
                 TextField(
                   controller: _passwordController,
                   obscureText: _obscureText,
-                  style: TextStyle(color: Colors.black87, fontSize: 16),
+                  style: const TextStyle(color: Colors.black87, fontSize: 16),
                   decoration: InputDecoration(
                     labelText: 'Password',
                     labelStyle: TextStyle(color: Colors.grey[700]),

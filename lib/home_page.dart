@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _pages = [
     const HomePage(),
     const ProfilePage(),
-    AboutUsPage(),
+    const AboutUsPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> {
   void _navigateToAboutUsPage() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => AboutUsPage()),
+      MaterialPageRoute(builder: (context) => const AboutUsPage()),
     );
   }
 
@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           title: Text(
             AppLocalizations.of(context).appTitle,
-            style: TextStyle(
+            style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 24.0,
             ),
@@ -190,12 +190,12 @@ class _HomePageState extends State<HomePage> {
               ),
               ListTile(
                 leading: const Icon(Icons.info),
-                title: Text('About Us'),
+                title: const Text('About Us'),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => AboutUsPage()),
+                    MaterialPageRoute(builder: (context) => const AboutUsPage()),
                   );
                 },
               ),
@@ -376,10 +376,10 @@ class _HomePageState extends State<HomePage> {
                 delegate: SliverChildListDelegate(
                   [
                     Padding(
-                      padding: EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(8.0),
                       child: Text(
                         AppLocalizations.of(context).allProducts,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -617,7 +617,7 @@ class _HomePageState extends State<HomePage> {
       );
     }).catchError((error) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error placing order')),
+        const SnackBar(content: Text('Error placing order')),
       );
     });
   }

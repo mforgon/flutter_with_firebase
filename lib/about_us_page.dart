@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'navigation_widget/common_bottom_navigationbar.dart';
 
 class AboutUsPage extends StatefulWidget {
+  const AboutUsPage({super.key});
+
   @override
   _AboutUsPageState createState() => _AboutUsPageState();
 }
@@ -20,9 +22,9 @@ class _AboutUsPageState extends State<AboutUsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('About Us'),
+        title: const Text('About Us'),
       ),
-      body: Padding(
+      body: const Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

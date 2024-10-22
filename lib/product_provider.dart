@@ -57,7 +57,7 @@ void filterProductsByCategory(String category) {
 
 List<Product> getRecommendedProducts() {
   List<Product> recommendations = [];
-  Set<String> usedCategories = Set();
+  Set<String> usedCategories = {};
 
   // Use filtered products instead of all products
   List<Product> productsToRecommend = _filteredProducts.isNotEmpty ? _filteredProducts : _products;

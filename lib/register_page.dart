@@ -62,7 +62,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ..shader = const LinearGradient(
                         colors: [Colors.blueAccent, Colors.purpleAccent],
                       ).createShader(
-                        Rect.fromLTWH(0, 0, 200, 100),
+                        const Rect.fromLTWH(0, 0, 200, 100),
                       ),
                   ),
                 ),
