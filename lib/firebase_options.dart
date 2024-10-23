@@ -52,7 +52,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCOJVwsuomCFqYU1xkM3ZlLyhJRB6PDsiM',
-    appId: '1:571675802801:android:2a88e3a8c0ad38257bf690',
+    appId: '1:571675802801:android:3f0579dbd4e8d83a7bf690',
     messagingSenderId: '571675802801',
     projectId: 'flutterfirebase-2fe6d',
     storageBucket: 'flutterfirebase-2fe6d.appspot.com',
@@ -85,5 +85,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'flutterfirebase-2fe6d.appspot.com',
     measurementId: 'G-BLYBBEBE63',
   );
-
 }
