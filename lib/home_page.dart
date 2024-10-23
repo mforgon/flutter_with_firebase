@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_with_firebase/language/language_provider.dart';
 import 'package:flutter_with_firebase/profile_page.dart';
 import 'package:provider/provider.dart';
 import 'about_us_page.dart';
@@ -9,8 +10,6 @@ import 'home_page_drawer.dart';
 import 'home_page_body.dart';
 import 'language/app_localizations.dart';
 import 'navigation_widget/common_bottom_navigationbar.dart';
-import 'product_provider.dart';
-import 'firestore_service.dart';
 import 'theme/theme_provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -59,7 +58,7 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         appBar: buildAppBar(context, themeProvider),
         drawer: buildDrawer(context, user),
-        body: HomePageBody(),
+        body: const HomePageBody(),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
             Navigator.push(
