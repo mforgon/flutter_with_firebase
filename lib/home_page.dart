@@ -9,6 +9,8 @@ import 'home_page_drawer.dart';
 import 'home_page_body.dart';
 import 'language/app_localizations.dart';
 import 'navigation_widget/common_bottom_navigationbar.dart';
+import 'product_provider.dart';
+import 'firestore_service.dart';
 import 'theme/theme_provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -57,7 +59,7 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         appBar: buildAppBar(context, themeProvider),
         drawer: buildDrawer(context, user),
-        body: const HomePageBody(),
+        body: HomePageBody(),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
             Navigator.push(

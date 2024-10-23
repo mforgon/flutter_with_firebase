@@ -19,8 +19,8 @@ AppBar buildAppBar(BuildContext context, ThemeProvider themeProvider) {
     ),
     centerTitle: true,
     elevation: 0.0,
-    backgroundColor: Theme.of(context).colorScheme.surface,
-    foregroundColor: Theme.of(context).colorScheme.onSurface,
+    backgroundColor: Theme.of(context).colorScheme.background,
+    foregroundColor: Theme.of(context).colorScheme.onBackground,
     actions: [
       IconButton(
         icon: Stack(
@@ -59,7 +59,7 @@ AppBar buildAppBar(BuildContext context, ThemeProvider themeProvider) {
         },
       ),
       IconButton(
-        icon: Icon(Icons.receipt_long, color: Theme.of(context).colorScheme.onSurface),
+        icon: Icon(Icons.receipt_long, color: Theme.of(context).colorScheme.onBackground),
         onPressed: () {
           Navigator.push(
             context,

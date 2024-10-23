@@ -7,7 +7,7 @@ class ProductProvider with ChangeNotifier {
   List<Product> _products = [];
   List<Product> _filteredProducts = [];
   final List<Product> _wishlist = [];
-  final List<String> _categories = ['All', 'Electronics', 'Jewelery', 'Men\'s Clothing', 'Women\'s Clothing'];
+  List<String> _categories = ['All', 'Electronics', 'Jewelery', 'Men\'s Clothing', 'Women\'s Clothing'];
   String _selectedCategory = 'All';
   String _priceSort = 'Default';
 

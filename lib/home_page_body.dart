@@ -7,8 +7,6 @@ import 'firestore_service.dart';
 import 'home_page_helpers.dart';
 
 class HomePageBody extends StatelessWidget {
-  const HomePageBody({super.key});
-
   @override
   Widget build(BuildContext context) {
     final productProvider = Provider.of<ProductProvider>(context);
