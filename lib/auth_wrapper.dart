@@ -8,7 +8,6 @@ class AuthWrapper extends StatefulWidget {
   const AuthWrapper({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _AuthWrapperState createState() => _AuthWrapperState();
 }
 
@@ -18,6 +17,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
   @override
   void initState() {
     super.initState();
+    _checkCurrentUser();
     // Show the splash screen for 3 seconds
     Future.delayed(const Duration(seconds: 3), () {
       setState(() {
@@ -26,33 +26,28 @@ class _AuthWrapperState extends State<AuthWrapper> {
     });
   }
 
+  // Check if a user is currently logged in
+  void _checkCurrentUser() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      // User is signed in
+      setState(() {
+        _isSplashScreenVisible = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_isSplashScreenVisible) {
       return const SplashScreen(); // Show the splash screen
     } else {
-      return StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          } else if (snapshot.hasError) {
-            return Scaffold(
-              body: Center(
-                child: Text('Error: ${snapshot.error}'),
-              ),
-            );
-          } else if (snapshot.hasData) {
-            return const HomePage();
-          } else {
-            return const LoginPage();
-          }
-        },
-      );
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        return const HomePage(); // User is logged in
+      } else {
+        return const LoginPage(); // User is not logged in
+      }
     }
   }
 }
