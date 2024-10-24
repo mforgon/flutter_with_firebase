@@ -9,7 +9,8 @@ class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
 
   static final Map<String, Map<String, String>> _localizedValues = {
     'en': {
@@ -36,6 +37,19 @@ class AppLocalizations {
       'darkTheme': 'Dark',
       'home': 'Home',
       'aboutUs': 'About Us',
+      'profileUpdated': 'Profile updated successfully',
+      'profileUpdateFailed': 'Failed to update profile',
+      'fillPasswordFields':
+          'Please fill in both password fields to change your password.',
+      'passwordUpdated': 'Password updated successfully',
+      'passwordUpdateFailed': 'Failed to update password',
+      'name': 'Name',
+      'nameCannotBeEmpty': 'Name cannot be empty',
+      'email': 'Email',
+      'saveProfile': 'Save Profile',
+      'changePassword': 'Change Password',
+      'oldPassword': 'Old Password',
+      'newPassword': 'New Password',
     },
     'zh': {
       'appTitle': '威米商城',
@@ -61,6 +75,18 @@ class AppLocalizations {
       'darkTheme': '深色',
       'home': '主页',
       'aboutUs': '关于我们',
+      'profileUpdated': '个人资料更新成功',
+      'profileUpdateFailed': '更新个人资料失败',
+      'fillPasswordFields': '请填写两个密码字段以更改密码。',
+      'passwordUpdated': '密码更新成功',
+      'passwordUpdateFailed': '更新密码失败',
+      'name': '姓名',
+      'nameCannotBeEmpty': '姓名不能为空',
+      'email': '电子邮件',
+      'saveProfile': '保存个人资料',
+      'changePassword': '更改密码',
+      'oldPassword': '旧密码',
+      'newPassword': '新密码',
     },
     'km': {
       'appTitle': 'Vmerce ទំព័រដើម',
@@ -86,39 +112,90 @@ class AppLocalizations {
       'darkTheme': 'ងងឹត',
       'home': 'ទំព័រដើម',
       'aboutUs': 'អំពីយើង',
+      'profileUpdated': 'ប្រវត្តិរូបបានធ្វើបច្ចុប្បន្នភាពដោយជោគជ័យ',
+      'profileUpdateFailed': 'បរាជ័យក្នុងការធ្វើបច្ចុប្បន្នភាពប្រវត្តិរូប',
+      'fillPasswordFields':
+          'សូមបំពេញវាលពាក្យសម្ងាត់ទាំងពីរដើម្បីផ្លាស់ប្តូរពាក្យសម្ងាត់របស់អ្នក។',
+      'passwordUpdated': 'ពាក្យសម្ងាត់បានធ្វើបច្ចុប្បន្នភាពដោយជោគជ័យ',
+      'passwordUpdateFailed': 'បរាជ័យក្នុងការធ្វើបច្ចុប្បន្នភាពពាក្យសម្ងាត់',
+      'name': 'ឈ្មោះ',
+      'nameCannotBeEmpty': 'ឈ្មោះមិនអាចទទេ',
+      'email': 'អ៊ីមែល',
+      'saveProfile': 'រក្សាទុកប្រវត្តិរូប',
+      'changePassword': 'ផ្លាស់ប្តូរពាក្យសម្ងាត់',
+      'oldPassword': 'ពាក្យសម្ងាត់ចាស់',
+      'newPassword': 'ពាក្យសម្ងាត់ថ្មី',
     },
   };
 
   String get appTitle => _localizedValues[locale.languageCode]!['appTitle']!;
-  String get searchHint => _localizedValues[locale.languageCode]!['searchHint']!;
-  String get sortByPrice => _localizedValues[locale.languageCode]!['sortByPrice']!;
-  String get recommendedForYou => _localizedValues[locale.languageCode]!['recommendedForYou']!;
-  String get allProducts => _localizedValues[locale.languageCode]!['allProducts']!;
-  String get addProduct => _localizedValues[locale.languageCode]!['addProduct']!;
+  String get searchHint =>
+      _localizedValues[locale.languageCode]!['searchHint']!;
+  String get sortByPrice =>
+      _localizedValues[locale.languageCode]!['sortByPrice']!;
+  String get recommendedForYou =>
+      _localizedValues[locale.languageCode]!['recommendedForYou']!;
+  String get allProducts =>
+      _localizedValues[locale.languageCode]!['allProducts']!;
+  String get addProduct =>
+      _localizedValues[locale.languageCode]!['addProduct']!;
   String get language => _localizedValues[locale.languageCode]!['language']!;
-  String get allCategory => _localizedValues[locale.languageCode]!['allCategory']!;
-  String get electronicsCategory => _localizedValues[locale.languageCode]!['electronicsCategory']!;
-  String get jeweleryCategory => _localizedValues[locale.languageCode]!['jeweleryCategory']!;
-  String get mensClothingCategory => _localizedValues[locale.languageCode]!['mensClothingCategory']!;
-  String get womensClothingCategory => _localizedValues[locale.languageCode]!['womensClothingCategory']!;
+  String get allCategory =>
+      _localizedValues[locale.languageCode]!['allCategory']!;
+  String get electronicsCategory =>
+      _localizedValues[locale.languageCode]!['electronicsCategory']!;
+  String get jeweleryCategory =>
+      _localizedValues[locale.languageCode]!['jeweleryCategory']!;
+  String get mensClothingCategory =>
+      _localizedValues[locale.languageCode]!['mensClothingCategory']!;
+  String get womensClothingCategory =>
+      _localizedValues[locale.languageCode]!['womensClothingCategory']!;
   String get noneSort => _localizedValues[locale.languageCode]!['noneSort']!;
-  String get lowestToHighestSort => _localizedValues[locale.languageCode]!['lowestToHighestSort']!;
-  String get highestToLowestSort => _localizedValues[locale.languageCode]!['highestToLowestSort']!;
+  String get lowestToHighestSort =>
+      _localizedValues[locale.languageCode]!['lowestToHighestSort']!;
+  String get highestToLowestSort =>
+      _localizedValues[locale.languageCode]!['highestToLowestSort']!;
   String get profile => _localizedValues[locale.languageCode]!['profile']!;
   String get signOut => _localizedValues[locale.languageCode]!['signOut']!;
   String get theme => _localizedValues[locale.languageCode]!['theme']!;
-  String get systemTheme => _localizedValues[locale.languageCode]!['systemTheme']!;
-  String get lightTheme => _localizedValues[locale.languageCode]!['lightTheme']!;
+  String get systemTheme =>
+      _localizedValues[locale.languageCode]!['systemTheme']!;
+  String get lightTheme =>
+      _localizedValues[locale.languageCode]!['lightTheme']!;
   String get darkTheme => _localizedValues[locale.languageCode]!['darkTheme']!;
   String get home => _localizedValues[locale.languageCode]!['home']!;
   String get aboutUs => _localizedValues[locale.languageCode]!['aboutUs']!;
+  String get profileUpdated =>
+      _localizedValues[locale.languageCode]!['profileUpdated']!;
+  String get profileUpdateFailed =>
+      _localizedValues[locale.languageCode]!['profileUpdateFailed']!;
+  String get fillPasswordFields =>
+      _localizedValues[locale.languageCode]!['fillPasswordFields']!;
+  String get passwordUpdated =>
+      _localizedValues[locale.languageCode]!['passwordUpdated']!;
+  String get passwordUpdateFailed =>
+      _localizedValues[locale.languageCode]!['passwordUpdateFailed']!;
+  String get name => _localizedValues[locale.languageCode]!['name']!;
+  String get nameCannotBeEmpty =>
+      _localizedValues[locale.languageCode]!['nameCannotBeEmpty']!;
+  String get email => _localizedValues[locale.languageCode]!['email']!;
+  String get saveProfile =>
+      _localizedValues[locale.languageCode]!['saveProfile']!;
+  String get changePassword =>
+      _localizedValues[locale.languageCode]!['changePassword']!;
+  String get oldPassword =>
+      _localizedValues[locale.languageCode]!['oldPassword']!;
+  String get newPassword =>
+      _localizedValues[locale.languageCode]!['newPassword']!;
 }
 
-class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
-  bool isSupported(Locale locale) => ['en', 'zh', 'km'].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      ['en', 'zh', 'km'].contains(locale.languageCode);
 
   @override
   Future<AppLocalizations> load(Locale locale) async {
