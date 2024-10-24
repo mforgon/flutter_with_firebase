@@ -1,7 +1,5 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_with_firebase/login_page.dart';
-
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -32,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
             children: [
               Image.asset('assets/logo.png', width: 600, height: 600),
               const SizedBox(height: 20),
-              
+              const CircularProgressIndicator(), // Add the loading indicator here
             ],
           ),
         ),

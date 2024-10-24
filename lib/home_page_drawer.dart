@@ -9,6 +9,7 @@ import 'theme/theme_provider.dart';
 import 'language/language_provider.dart';
 
 Drawer buildDrawer(BuildContext context, User user) {
+  final themeProvider = Provider.of<ThemeProvider>(context);
   return Drawer(
     child: ListView(
       padding: EdgeInsets.zero,
@@ -58,31 +59,27 @@ Drawer buildDrawer(BuildContext context, User user) {
         ListTile(
           leading: const Icon(Icons.brightness_6),
           title: Text(AppLocalizations.of(context).theme),
-          trailing: Consumer<ThemeProvider>(
-            builder: (context, themeProvider, child) {
-              return DropdownButton<ThemeMode>(
-                value: themeProvider.themeMode,
-                onChanged: (ThemeMode? newThemeMode) {
-                  if (newThemeMode != null) {
-                    themeProvider.setThemeMode(newThemeMode);
-                  }
-                },
-                items: [
-                  DropdownMenuItem(
-                    value: ThemeMode.system,
-                    child: Text(AppLocalizations.of(context).systemTheme),
-                  ),
-                  DropdownMenuItem(
-                    value: ThemeMode.light,
-                    child: Text(AppLocalizations.of(context).lightTheme),
-                  ),
-                  DropdownMenuItem(
-                    value: ThemeMode.dark,
-                    child: Text(AppLocalizations.of(context).darkTheme),
-                  ),
-                ],
-              );
+          trailing: DropdownButton<int>(
+            value: themeProvider.themeIndex,
+            onChanged: (int? newThemeIndex) {
+              if (newThemeIndex != null) {
+                themeProvider.setTheme(newThemeIndex);
+              }
             },
+            items: [
+              DropdownMenuItem(
+                value: 0,
+                child: Text(AppLocalizations.of(context).systemTheme),
+              ),
+              DropdownMenuItem(
+                value: 1,
+                child: Text(AppLocalizations.of(context).lightTheme),
+              ),
+              DropdownMenuItem(
+                value: 2,
+                child: Text(AppLocalizations.of(context).darkTheme),
+              ),
+            ],
           ),
         ),
         ListTile(

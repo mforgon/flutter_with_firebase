@@ -29,8 +29,10 @@ class ProductProvider with ChangeNotifier {
   }
 
   void addToWishlist(Product product) {
-    _wishlist.add(product);
-    notifyListeners();
+    if (!_wishlist.any((p) => p.id == product.id)) {
+      _wishlist.add(product);
+      notifyListeners();
+    }
   }
 
   void removeFromWishlist(String productId) {
@@ -56,18 +58,21 @@ class ProductProvider with ChangeNotifier {
 
   void setPriceSort(String sortOption) {
     _priceSort = sortOption;
-    if (sortOption == 'Lowest to Highest') {
+    if (sortOption == 'Default') {
+      _filteredProducts = _products;
+    } else if (sortOption == 'Lowest to Highest') {
       sortProductsByPrice(true);
     } else if (sortOption == 'Highest to Lowest') {
       sortProductsByPrice(false);
     }
+    notifyListeners();
   }
 
   void filterProductsByCategory(String category) {
-    if (category == 'All') {
+    if (category.toLowerCase() == 'all') {
       _filteredProducts = _products;
     } else {
-      _filteredProducts = _products.where((product) => product.category == category.toLowerCase()).toList();
+      _filteredProducts = _products.where((product) => product.category.toLowerCase() == category.toLowerCase()).toList();
     }
     notifyListeners();
   }
@@ -101,14 +106,29 @@ class ProductProvider with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) async {
-    await _firestoreService.addProduct(product);
+    try {
+      await _firestoreService.addProduct(product);
+    } catch (e) {
+      // Handle error, e.g., log it or show a message to the user
+      print('Error adding product: $e');
+    }
   }
 
   Future<void> updateProduct(Product product) async {
-    await _firestoreService.updateProduct(product);
+    try {
+      await _firestoreService.updateProduct(product);
+    } catch (e) {
+      // Handle error
+      print('Error updating product: $e');
+    }
   }
 
   Future<void> deleteProduct(String id) async {
-    await _firestoreService.deleteProduct(id);
+    try {
+      await _firestoreService.deleteProduct(id);
+    } catch (e) {
+      // Handle error
+      print('Error deleting product: $e');
+    }
   }
 }

@@ -15,6 +15,24 @@ class HomePageBody extends StatelessWidget {
     final firestoreService = Provider.of<FirestoreService>(context);
     final user = FirebaseAuth.instance.currentUser;
 
+    // Ensure the initial value of priceSort is valid
+    final priceSortOptions = [
+      AppLocalizations.of(context).noneSort,
+      AppLocalizations.of(context).lowestToHighestSort,
+      AppLocalizations.of(context).highestToLowestSort,
+    ];
+
+    if (!priceSortOptions.contains(productProvider.priceSort)) {
+      productProvider.setPriceSort(priceSortOptions.first);
+    }
+    final categories = [
+      AppLocalizations.of(context).allCategory,
+      AppLocalizations.of(context).electronicsCategory,
+      AppLocalizations.of(context).jeweleryCategory,
+      AppLocalizations.of(context).mensClothingCategory,
+      AppLocalizations.of(context).womensClothingCategory,
+    ];
+
     return CustomScrollView(
       slivers: [
         SliverPadding(
@@ -43,7 +61,7 @@ class HomePageBody extends StatelessWidget {
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-              children: productProvider.categories.map((category) {
+              children: categories.map((category) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4.0),
                   child: ChoiceChip(
@@ -70,16 +88,13 @@ class HomePageBody extends StatelessWidget {
                 ),
                 DropdownButton<String>(
                   value: productProvider.priceSort,
-                  items: <String>[
-                    AppLocalizations.of(context).noneSort,
-                    AppLocalizations.of(context).lowestToHighestSort,
-                    AppLocalizations.of(context).highestToLowestSort,
-                  ].map<DropdownMenuItem<String>>((String value) {
+                  items: priceSortOptions.map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(
                         value,
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: Colors.black),
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: Theme.of(context).textTheme.bodyLarge?.color,),
+                        
                       ),
                     );
                   }).toList(),
@@ -91,7 +106,7 @@ class HomePageBody extends StatelessWidget {
                   style: const TextStyle(fontSize: 12, color: Colors.black87),
                   underline: Container(
                     height: 1,
-                    color: Colors.grey[300],
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
                   ),
                   icon: const Icon(Icons.arrow_drop_down, size: 20),
                 ),
