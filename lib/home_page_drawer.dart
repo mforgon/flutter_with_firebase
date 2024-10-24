@@ -47,7 +47,7 @@ Drawer buildDrawer(BuildContext context, User user) {
         ),
         ListTile(
           leading: const Icon(Icons.info),
-          title: const Text('About Us'),
+          title: Text(AppLocalizations.of(context).aboutUs),
           onTap: () {
             Navigator.pop(context);
             Navigator.push(
