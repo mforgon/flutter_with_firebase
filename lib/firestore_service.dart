@@ -96,13 +96,26 @@ Future<void> addToWishlist(String userId, Product product) async {
         'name': product.name,
         'price': product.price,
         'imageUrl': product.imageUrl,
-        // Add other product fields as necessary
+        'category': product.category,
+        'description': product.description,
       });
     } catch (e) {
       print('Error adding to wishlist: $e');
     }
   }
 
+  Future<void> removeFromWishlist(String userId, String productId) async {
+    try {
+      await _db.collection('users').doc(userId).collection('wishlist').doc(productId).delete();
+    } catch (e) {
+      print('Error removing from wishlist: $e');
+    }
+  }
+
+  Stream<List<Product>> getWishlist(String userId) {
+    return _db.collection('users').doc(userId).collection('wishlist').snapshots().map((snapshot) =>
+        snapshot.docs.map((doc) => Product.fromFirestore(doc)).toList());
+  }
 
 }
 

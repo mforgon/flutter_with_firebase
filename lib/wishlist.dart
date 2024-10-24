@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_with_firebase/product_provider.dart';
 import 'package:provider/provider.dart';
-
 class WishlistPage extends StatelessWidget {
   const WishlistPage({super.key});
 

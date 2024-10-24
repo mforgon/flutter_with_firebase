@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'firestore_service.dart';
 import 'product.dart';
 
 class ProductProvider with ChangeNotifier {
   final FirestoreService _firestoreService = FirestoreService();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   List<Product> _products = [];
   List<Product> _filteredProducts = [];
-  final List<Product> _wishlist = [];
+  List<Product> _wishlist = [];
   final List<String> _categories = ['All', 'Electronics', 'Jewelery', 'Men\'s Clothing', 'Women\'s Clothing'];
   String _selectedCategory = 'All';
   String _priceSort = 'Default';
@@ -20,6 +22,14 @@ class ProductProvider with ChangeNotifier {
 
   ProductProvider() {
     _firestoreService.getProducts().listen(_updateProducts);
+    _auth.authStateChanges().listen((user) {
+      if (user != null) {
+        _firestoreService.getWishlist(user.uid).listen((wishlist) {
+          _wishlist = wishlist;
+          notifyListeners();
+        });
+      }
+    });
   }
 
   void _updateProducts(List<Product> products) {
@@ -29,15 +39,17 @@ class ProductProvider with ChangeNotifier {
   }
 
   void addToWishlist(Product product) {
-    if (!_wishlist.any((p) => p.id == product.id)) {
-      _wishlist.add(product);
-      notifyListeners();
+    final user = _auth.currentUser;
+    if (user != null && !_wishlist.any((p) => p.id == product.id)) {
+      _firestoreService.addToWishlist(user.uid, product);
     }
   }
 
   void removeFromWishlist(String productId) {
-    _wishlist.removeWhere((product) => product.id == productId);
-    notifyListeners();
+    final user = _auth.currentUser;
+    if (user != null) {
+      _firestoreService.removeFromWishlist(user.uid, productId);
+    }
   }
 
   void searchProducts(String query) {
