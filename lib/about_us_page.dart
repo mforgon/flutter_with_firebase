@@ -58,14 +58,46 @@ class _AboutUsPageState extends State<AboutUsPage> {
             Row(
               children: [
                 CircleAvatar(
+                  backgroundImage: AssetImage('assets/lisa.jpg'),
+                ),
+                SizedBox(width: 16.0),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Lisa Manoban'),
+                    Text('CEO'),
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(height: 16.0),
+            Row(
+              children: [
+                CircleAvatar(
+                  backgroundImage: AssetImage('assets/bradpit.jpg'),
+                ),
+                SizedBox(width: 16.0),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Brad Pitt'),
+                    Text('Product Manager'),
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(height: 16.0),
+            Row(
+              children: [
+                CircleAvatar(
                   backgroundImage: AssetImage('assets/team_member1.jpg'),
                 ),
                 SizedBox(width: 16.0),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('John Doe'),
-                    Text('CEO'),
+                    Text('John Smith'),
+                    Text('Market Manager'),
                   ],
                 ),
               ],
@@ -80,8 +112,8 @@ class _AboutUsPageState extends State<AboutUsPage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Jane Smith'),
-                    Text('Product Manager'),
+                    Text('Rock Smith'),
+                    Text('Designer'),
                   ],
                 ),
               ],

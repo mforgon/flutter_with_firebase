@@ -43,6 +43,7 @@ dependencies:
   cloud_firestore: ^5.2.1
   intl: ^0.19.0
   flutter_secure_storage: ^9.2.2
+  connectivity_plus: ^6.1.0
   # firebase_messaging: ^15.0.4
   
 
@@ -75,6 +76,10 @@ flutter:
   assets:
     - assets/logosplash.jpg
     - assets/logo.png
+    - assets/team_member1.jpg
+    - assets/team_member2.jpg
+    - assets/bradpit.jpg
+    - assets/lisa.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
