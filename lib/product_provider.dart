@@ -17,6 +17,10 @@ class ProductProvider with ChangeNotifier {
   // Cache for localized categories
   Map<String, String> _categoryMappings = {};
 
+
+  // Add a map to store sort option mappings
+  final Map<String, String> _sortOptionMappings = {};
+
   List<Product> get products => _products;
   List<Product> get filteredProducts => _filteredProducts;
   List<Product> get wishlist => _wishlist;
@@ -113,17 +117,49 @@ class ProductProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void setPriceSort(String sortOption) {
-    _priceSort = sortOption;
-    if (sortOption == 'Default') {
-      _filteredProducts = _products;
-    } else if (sortOption == 'Lowest to Highest') {
-      sortProductsByPrice(true);
-    } else if (sortOption == 'Highest to Lowest') {
-      sortProductsByPrice(false);
+ 
+
+ void initSortOptions(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
+    _sortOptionMappings.clear();
+    _sortOptionMappings[localizations.noneSort] = 'Default';
+    _sortOptionMappings[localizations.lowestToHighestSort] = 'Lowest to Highest';
+    _sortOptionMappings[localizations.highestToLowestSort] = 'Highest to Lowest';
+  }
+
+  // Update the setPriceSort method
+  void setPriceSort(String localizedSortOption) {
+    final standardSortOption = _sortOptionMappings[localizedSortOption] ?? 'Default';
+    _priceSort = localizedSortOption;
+
+    if (standardSortOption == 'Default') {
+      // Reset to original order
+      _filteredProducts = List.from(_products);
+      if (_selectedCategory != 'All') {
+        filterProductsByCategory(_selectedCategory);
+      }
+    } else {
+      bool ascending = standardSortOption == 'Lowest to Highest';
+      sortProductsByPrice(ascending);
     }
     notifyListeners();
   }
+
+  // Update the sortProductsByPrice method
+  void sortProductsByPrice(bool ascending) {
+    _filteredProducts.sort((a, b) {
+      if (a.price == b.price) {
+        return 0;
+      }
+      if (ascending) {
+        return a.price.compareTo(b.price);
+      } else {
+        return b.price.compareTo(a.price);
+      }
+    });
+    notifyListeners();
+  }
+
 
   
   List<Product> getRecommendedProducts() {
@@ -147,12 +183,6 @@ class ProductProvider with ChangeNotifier {
     return recommendations;
   }
 
-  void sortProductsByPrice(bool ascending) {
-    _filteredProducts.sort((a, b) => ascending
-        ? a.price.compareTo(b.price)
-        : b.price.compareTo(a.price));
-    notifyListeners();
-  }
 
   Future<void> addProduct(Product product) async {
     try {

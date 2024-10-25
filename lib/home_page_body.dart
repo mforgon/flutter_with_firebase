@@ -15,6 +15,10 @@ class HomePageBody extends StatelessWidget {
     final firestoreService = Provider.of<FirestoreService>(context);
     final user = FirebaseAuth.instance.currentUser;
 
+
+  // Initialize sort options with current locale
+    productProvider.initSortOptions(context);
+
     // Ensure the initial value of priceSort is valid
     final priceSortOptions = [
       AppLocalizations.of(context).noneSort,
