@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_with_firebase/cart_logic.dart';
-import 'package:flutter_with_firebase/cart_screen.dart';
 import 'package:flutter_with_firebase/edit_product_page.dart';
 import 'package:provider/provider.dart';
 import 'product.dart';

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_with_firebase/order_history.dart';
 import 'package:flutter_with_firebase/product.dart';
-import 'package:flutter_with_firebase/product_provider.dart';
 import 'package:provider/provider.dart';
 import 'cart_logic.dart';
 import 'package:firebase_auth/firebase_auth.dart';

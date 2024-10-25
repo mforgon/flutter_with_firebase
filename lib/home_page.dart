@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_with_firebase/cart_logic.dart';
 import 'package:flutter_with_firebase/language/language_provider.dart';
 import 'package:flutter_with_firebase/profile_page.dart';
 import 'package:provider/provider.dart';
