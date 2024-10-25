@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'firestore_service.dart';
+import 'language/app_localizations.dart';
 import 'product.dart';
 
 class ProductProvider with ChangeNotifier {
@@ -9,16 +10,27 @@ class ProductProvider with ChangeNotifier {
   List<Product> _products = [];
   List<Product> _filteredProducts = [];
   List<Product> _wishlist = [];
-  final List<String> _categories = ['All', 'Electronics', 'Jewelery', 'Men\'s Clothing', 'Women\'s Clothing'];
+  // final List<String> _categories = ['All', 'Electronics', 'Jewelery', 'Men\'s Clothing', 'Women\'s Clothing'];
   String _selectedCategory = 'All';
   String _priceSort = 'Default';
 
   List<Product> get products => _products;
   List<Product> get filteredProducts => _filteredProducts;
   List<Product> get wishlist => _wishlist;
-  List<String> get categories => _categories;
+  // List<String> get categories => _categories;
   String get selectedCategory => _selectedCategory;
   String get priceSort => _priceSort;
+
+   List<String> getCategories(BuildContext context) {
+    return [
+      AppLocalizations.of(context).allCategory,
+      AppLocalizations.of(context).electronicsCategory,
+      AppLocalizations.of(context).jeweleryCategory,
+      AppLocalizations.of(context).mensClothingCategory,
+      AppLocalizations.of(context).womensClothingCategory,
+    ];
+  }
+
 
   ProductProvider() {
     _firestoreService.getProducts().listen(_updateProducts);

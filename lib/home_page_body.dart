@@ -25,14 +25,8 @@ class HomePageBody extends StatelessWidget {
     if (!priceSortOptions.contains(productProvider.priceSort)) {
       productProvider.setPriceSort(priceSortOptions.first);
     }
-    final categories = [
-      AppLocalizations.of(context).allCategory,
-      AppLocalizations.of(context).electronicsCategory,
-      AppLocalizations.of(context).jeweleryCategory,
-      AppLocalizations.of(context).mensClothingCategory,
-      AppLocalizations.of(context).womensClothingCategory,
-    ];
 
+    final categories = productProvider.getCategories(context);
     return CustomScrollView(
       slivers: [
         SliverPadding(
