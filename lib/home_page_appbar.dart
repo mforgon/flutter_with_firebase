@@ -19,7 +19,7 @@ AppBar buildAppBar(BuildContext context, ThemeProvider themeProvider) {
         fontSize: 24.0,
       ),
     ),
-    centerTitle: true,
+    centerTitle: false,
     elevation: 0.0,
     backgroundColor: Theme.of(context).colorScheme.surface,
     foregroundColor: Theme.of(context).colorScheme.onSurface,
