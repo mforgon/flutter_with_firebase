@@ -1,13 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_with_firebase/cart_logic.dart';
+import 'package:flutter_with_firebase/cart_screen.dart';
 import 'package:flutter_with_firebase/edit_product_page.dart';
+import 'package:provider/provider.dart';
 import 'product.dart';
 import 'product_details_page.dart';
 import 'firestore_service.dart';
 import 'order_model.dart';
 import 'product_provider.dart';
 
-Widget buildHorizontalProductList(BuildContext context, String title, List<Product> products) {
+Widget buildHorizontalProductList(
+    BuildContext context, String title, List<Product> products) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -46,7 +50,8 @@ Widget buildHorizontalProductList(BuildContext context, String title, List<Produ
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ClipRRect(
-                        borderRadius: const BorderRadius.vertical(top: Radius.circular(8.0)),
+                        borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(8.0)),
                         child: Image.network(
                           product.imageUrl,
                           height: 120,
@@ -61,7 +66,8 @@ Widget buildHorizontalProductList(BuildContext context, String title, List<Produ
                           children: [
                             Text(
                               product.name,
-                              style: const TextStyle(fontWeight: FontWeight.bold),
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -85,7 +91,8 @@ Widget buildHorizontalProductList(BuildContext context, String title, List<Produ
   );
 }
 
-Widget buildProductCard(BuildContext context, Product product, User? user, FirestoreService firestoreService, ProductProvider productProvider) {
+Widget buildProductCard(BuildContext context, Product product, User? user,
+    FirestoreService firestoreService, ProductProvider productProvider) {
   return Card(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(16.0),
@@ -106,7 +113,8 @@ Widget buildProductCard(BuildContext context, Product product, User? user, Fires
           Expanded(
             flex: 3,
             child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(16.0)),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(16.0)),
               child: Image.network(
                 product.imageUrl,
                 fit: BoxFit.cover,
@@ -123,7 +131,8 @@ Widget buildProductCard(BuildContext context, Product product, User? user, Fires
                 children: [
                   Text(
                     product.name,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 14.0),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -140,7 +149,8 @@ Widget buildProductCard(BuildContext context, Product product, User? user, Fires
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => EditProductPage(product: product),
+                              builder: (context) =>
+                                  EditProductPage(product: product),
                             ),
                           );
                         },
@@ -154,7 +164,8 @@ Widget buildProductCard(BuildContext context, Product product, User? user, Fires
                       IconButton(
                         icon: const Icon(Icons.add_shopping_cart, size: 20),
                         onPressed: () {
-                          placeOrder(context, product, user!.uid, firestoreService);
+                          placeOrder(
+                              context, product, user!.uid, firestoreService);
                         },
                       ),
                     ],
@@ -169,7 +180,8 @@ Widget buildProductCard(BuildContext context, Product product, User? user, Fires
   );
 }
 
-void placeOrder(BuildContext context, Product product, String userId, FirestoreService firestoreService) {
+void placeOrder(BuildContext context, Product product, String userId,
+    FirestoreService firestoreService) {
   final orderId = DateTime.now().millisecondsSinceEpoch.toString();
   final newOrder = Order(
     id: orderId,
@@ -179,13 +191,15 @@ void placeOrder(BuildContext context, Product product, String userId, FirestoreS
     date: DateTime.now(),
   );
 
+  context.read<CartLogic>().toggleProductInCart(product);
+
   firestoreService.addOrder(newOrder).then((_) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Order placed successfully')),
+      SnackBar(content: Text('Product added to cart!')),
     );
   }).catchError((error) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Error placing order')),
+      SnackBar(content: Text('Failed to add product: $error')),
     );
   });
 }

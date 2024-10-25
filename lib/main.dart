@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_with_firebase/cart_logic.dart';
 import 'package:flutter_with_firebase/firestore_service.dart';
 import 'package:flutter_with_firebase/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +16,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => CartLogic()),
         ChangeNotifierProvider(create: (_) => ProductProvider()),
         Provider(create: (_) => FirestoreService()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),

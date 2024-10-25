@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_with_firebase/cart_logic.dart';
+import 'package:flutter_with_firebase/cart_screen.dart';
 import 'package:provider/provider.dart';
 import 'language/app_localizations.dart';
 import 'product_provider.dart';
@@ -59,13 +61,25 @@ AppBar buildAppBar(BuildContext context, ThemeProvider themeProvider) {
         },
       ),
       IconButton(
-        icon: Icon(Icons.receipt_long, color: Theme.of(context).colorScheme.onSurface),
+        icon: Icon(Icons.receipt_long,
+            color: Theme.of(context).colorScheme.onSurface),
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const OrderHistoryPage()),
           );
         },
+      ),
+      IconButton(
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => CartScreen(),
+          ));
+        },
+        icon: Badge(
+          label: Text("${context.watch<CartLogic>().numOfItems}"),
+          child: Icon(Icons.shopping_cart),
+        ),
       ),
     ],
   );
