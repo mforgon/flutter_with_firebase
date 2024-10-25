@@ -14,20 +14,34 @@ class ProductProvider with ChangeNotifier {
   String _selectedCategory = 'All';
   String _priceSort = 'Default';
 
+  // Cache for localized categories
+  Map<String, String> _categoryMappings = {};
+
   List<Product> get products => _products;
   List<Product> get filteredProducts => _filteredProducts;
   List<Product> get wishlist => _wishlist;
   // List<String> get categories => _categories;
   String get selectedCategory => _selectedCategory;
   String get priceSort => _priceSort;
+// Get categories in the current language
+  List<String> getCategories(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
+    
+    // Update category mappings for the current language
+    _categoryMappings = {
+      localizations.allCategory.toLowerCase(): 'all',
+      localizations.electronicsCategory.toLowerCase(): 'electronics',
+      localizations.jeweleryCategory.toLowerCase(): 'jewelery',
+      localizations.mensClothingCategory.toLowerCase(): "men's clothing",
+      localizations.womensClothingCategory.toLowerCase(): "women's clothing",
+    };
 
-   List<String> getCategories(BuildContext context) {
     return [
-      AppLocalizations.of(context).allCategory,
-      AppLocalizations.of(context).electronicsCategory,
-      AppLocalizations.of(context).jeweleryCategory,
-      AppLocalizations.of(context).mensClothingCategory,
-      AppLocalizations.of(context).womensClothingCategory,
+      localizations.allCategory,
+      localizations.electronicsCategory,
+      localizations.jeweleryCategory,
+      localizations.mensClothingCategory,
+      localizations.womensClothingCategory,
     ];
   }
 
@@ -75,9 +89,28 @@ class ProductProvider with ChangeNotifier {
     notifyListeners();
   }
 
+ // Get the standardized category value from a localized category name
+  String _getStandardCategory(String localizedCategory) {
+    return _categoryMappings[localizedCategory.toLowerCase()] ?? localizedCategory;
+  }
+
   void setSelectedCategory(String category) {
     _selectedCategory = category;
     filterProductsByCategory(category);
+  }
+
+  void filterProductsByCategory(String localizedCategory) {
+    final standardCategory = _getStandardCategory(localizedCategory);
+    
+    if (standardCategory.toLowerCase() == 'all') {
+      _filteredProducts = _products;
+    } else {
+      _filteredProducts = _products.where((product) {
+        // Convert product category to standard format for comparison
+        return product.category.toLowerCase() == standardCategory.toLowerCase();
+      }).toList();
+    }
+    notifyListeners();
   }
 
   void setPriceSort(String sortOption) {
@@ -92,15 +125,7 @@ class ProductProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void filterProductsByCategory(String category) {
-    if (category.toLowerCase() == 'all') {
-      _filteredProducts = _products;
-    } else {
-      _filteredProducts = _products.where((product) => product.category.toLowerCase() == category.toLowerCase()).toList();
-    }
-    notifyListeners();
-  }
-
+  
   List<Product> getRecommendedProducts() {
     List<Product> recommendations = [];
     Set<String> usedCategories = {};
