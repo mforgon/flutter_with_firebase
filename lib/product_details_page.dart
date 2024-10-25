@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_with_firebase/add_review_page.dart';
 import 'package:flutter_with_firebase/product_review.dart';
@@ -72,17 +73,29 @@ class ProductDetailsPage extends StatelessWidget {
                   const SizedBox(height: 24),
                   ElevatedButton.icon(
                     onPressed: () {
-                      Provider.of<ProductProvider>(context, listen: false)
-                          .addToWishlist(product);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('${product.name} added to wishlist!')),
-                      );
+                      final userId = FirebaseAuth.instance.currentUser
+                          ?.uid; // Retrieve current user ID
+                      if (userId != null) {
+                        Provider.of<ProductProvider>(context, listen: false)
+                            .addToWishlist(product, userId);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content:
+                                  Text('${product.name} added to wishlist!')),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content:
+                                  Text('Please log in to add to wishlist.')),
+                        );
+                      }
                     },
                     icon: const Icon(Icons.favorite),
-                    label: const Text('Add to Wishlist', ),
+                    label: const Text('Add to Wishlist'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
-                      foregroundColor: Colors.white, 
+                      foregroundColor: Colors.white,
                       minimumSize: const Size(double.infinity, 50),
                     ),
                   ),

@@ -17,7 +17,6 @@ class ProductProvider with ChangeNotifier {
   // Cache for localized categories
   Map<String, String> _categoryMappings = {};
 
-
   // Add a map to store sort option mappings
   final Map<String, String> _sortOptionMappings = {};
 
@@ -30,7 +29,7 @@ class ProductProvider with ChangeNotifier {
 // Get categories in the current language
   List<String> getCategories(BuildContext context) {
     final localizations = AppLocalizations.of(context);
-    
+
     // Update category mappings for the current language
     _categoryMappings = {
       localizations.allCategory.toLowerCase(): 'all',
@@ -48,7 +47,6 @@ class ProductProvider with ChangeNotifier {
       localizations.womensClothingCategory,
     ];
   }
-
 
   ProductProvider() {
     _firestoreService.getProducts().listen(_updateProducts);
@@ -68,7 +66,7 @@ class ProductProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void addToWishlist(Product product) {
+  void addToWishlist(Product product, String userId) {
     final user = _auth.currentUser;
     if (user != null && !_wishlist.any((p) => p.id == product.id)) {
       _firestoreService.addToWishlist(user.uid, product);
@@ -93,9 +91,10 @@ class ProductProvider with ChangeNotifier {
     notifyListeners();
   }
 
- // Get the standardized category value from a localized category name
+  // Get the standardized category value from a localized category name
   String _getStandardCategory(String localizedCategory) {
-    return _categoryMappings[localizedCategory.toLowerCase()] ?? localizedCategory;
+    return _categoryMappings[localizedCategory.toLowerCase()] ??
+        localizedCategory;
   }
 
   void setSelectedCategory(String category) {
@@ -105,7 +104,7 @@ class ProductProvider with ChangeNotifier {
 
   void filterProductsByCategory(String localizedCategory) {
     final standardCategory = _getStandardCategory(localizedCategory);
-    
+
     if (standardCategory.toLowerCase() == 'all') {
       _filteredProducts = _products;
     } else {
@@ -117,19 +116,20 @@ class ProductProvider with ChangeNotifier {
     notifyListeners();
   }
 
- 
-
- void initSortOptions(BuildContext context) {
+  void initSortOptions(BuildContext context) {
     final localizations = AppLocalizations.of(context);
     _sortOptionMappings.clear();
     _sortOptionMappings[localizations.noneSort] = 'Default';
-    _sortOptionMappings[localizations.lowestToHighestSort] = 'Lowest to Highest';
-    _sortOptionMappings[localizations.highestToLowestSort] = 'Highest to Lowest';
+    _sortOptionMappings[localizations.lowestToHighestSort] =
+        'Lowest to Highest';
+    _sortOptionMappings[localizations.highestToLowestSort] =
+        'Highest to Lowest';
   }
 
   // Update the setPriceSort method
   void setPriceSort(String localizedSortOption) {
-    final standardSortOption = _sortOptionMappings[localizedSortOption] ?? 'Default';
+    final standardSortOption =
+        _sortOptionMappings[localizedSortOption] ?? 'Default';
     _priceSort = localizedSortOption;
 
     if (standardSortOption == 'Default') {
@@ -160,13 +160,12 @@ class ProductProvider with ChangeNotifier {
     notifyListeners();
   }
 
-
-  
   List<Product> getRecommendedProducts() {
     List<Product> recommendations = [];
     Set<String> usedCategories = {};
 
-    List<Product> productsToRecommend = _filteredProducts.isNotEmpty ? _filteredProducts : _products;
+    List<Product> productsToRecommend =
+        _filteredProducts.isNotEmpty ? _filteredProducts : _products;
     List<Product> shuffledProducts = List.from(productsToRecommend)..shuffle();
 
     for (Product product in shuffledProducts) {
@@ -175,14 +174,14 @@ class ProductProvider with ChangeNotifier {
         usedCategories.add(product.category);
       }
 
-      if (recommendations.length == 5 || recommendations.length == productsToRecommend.length) {
+      if (recommendations.length == 5 ||
+          recommendations.length == productsToRecommend.length) {
         break;
       }
     }
 
     return recommendations;
   }
-
 
   Future<void> addProduct(Product product) async {
     try {
