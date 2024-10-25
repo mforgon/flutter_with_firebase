@@ -12,8 +12,8 @@ class CartLogic extends ChangeNotifier {
     } else {
       addToCart(item);
     }
-  }
-
+  } 
+ 
   void addToCart(Product item) {
     _cartList.add(item);
     notifyListeners();

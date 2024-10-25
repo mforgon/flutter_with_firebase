@@ -19,8 +19,8 @@ class _CartScreenState extends State<CartScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        foregroundColor: Theme.of(context).appBarTheme.foregroundColor,
         title: Text("Cart Screen"),
       ),
       body: _buildBody(),
@@ -31,7 +31,7 @@ class _CartScreenState extends State<CartScreen> {
   Widget _buildBody() {
     var cartList = context.watch<CartLogic>().cartList;
     return cartList.isEmpty
-        ? Center(child: Text('Your cart is empty!'))
+        ? Center(child: Text('Your cart is empty!', style: Theme.of(context).textTheme.bodyLarge))
         : _buildListView(cartList.cast<Product>());
   }
 
@@ -46,7 +46,7 @@ class _CartScreenState extends State<CartScreen> {
 
   Widget _buildItem(Product item) {
     return ListTile(
-      title: Text(item.name),
+      title: Text(item.name, style: Theme.of(context).textTheme.titleMedium),
       subtitle: SizedBox(
         height: 100,
         child: Image.network(item.imageUrl),
@@ -55,7 +55,7 @@ class _CartScreenState extends State<CartScreen> {
         onPressed: () {
           context.read<CartLogic>().toggleProductInCart(item);
         },
-        icon: Icon(Icons.cancel),
+        icon: Icon(Icons.cancel, color: Theme.of(context).iconTheme.color),
       ),
     );
   }
@@ -71,7 +71,7 @@ class _CartScreenState extends State<CartScreen> {
           children: [
             Text(
               'Total: \$${totalAmount.toStringAsFixed(2)}',
-              style: TextStyle(fontSize: 20),
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             ElevatedButton(
               onPressed: totalAmount > 0
