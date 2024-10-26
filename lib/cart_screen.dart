@@ -147,7 +147,7 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  void _checkout(BuildContext context) {
+ void _checkout(BuildContext context) {
   final cartLogic = context.read<CartLogic>();
   final userId = FirebaseAuth.instance.currentUser?.uid;
 
@@ -158,9 +158,37 @@ class _CartScreenState extends State<CartScreen> {
     return;
   }
 
-  final firestoreService =
-      Provider.of<FirestoreService>(context, listen: false);
+  final totalAmount = cartLogic.calculateTotalAmount();
 
+  // Show a confirmation dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Confirm Checkout'),
+        content: Text('Do you want to proceed with the checkout for \$${totalAmount.toStringAsFixed(2)}?'),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+            },
+          ),
+          TextButton(
+            child: Text('Confirm'),
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+              _proceedWithCheckout(context, cartLogic, userId);
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+void _proceedWithCheckout(BuildContext context, CartLogic cartLogic, String userId) {
+  final firestoreService = Provider.of<FirestoreService>(context, listen: false);
   final orderId = DateTime.now().millisecondsSinceEpoch.toString();
 
   // Create a list of OrderItems
@@ -187,6 +215,7 @@ class _CartScreenState extends State<CartScreen> {
     );
   });
 }
+
 
   
 }
