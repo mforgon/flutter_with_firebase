@@ -87,6 +87,20 @@ class AppLocalizations {
       'changePassword': '更改密码',
       'oldPassword': '旧密码',
       'newPassword': '新密码',
+      'cartTitle': 'Cart',
+      'wishlistTitle': 'Wishlist',
+      'orderHistoryTitle': 'Order History',
+      'addedToCart': 'added to cart!',
+      'loginToViewOrders': 'Please log in to view your order history.',
+      'error': 'Error',
+      'noOrdersFound': 'No orders found.',
+      'cartTitle': '购物车',
+      'wishlistTitle': '愿望清单',
+      'orderHistoryTitle': '订单历史',
+      'addedToCart': '已加入购物车！',
+      'loginToViewOrders': '请登录以查看您的订单历史。',
+      'error': '错误',
+      'noOrdersFound': '未找到订单。',
     },
     'km': {
       'appTitle': 'Vmerce ទំព័រដើម',
@@ -125,6 +139,13 @@ class AppLocalizations {
       'changePassword': 'ផ្លាស់ប្តូរពាក្យសម្ងាត់',
       'oldPassword': 'ពាក្យសម្ងាត់ចាស់',
       'newPassword': 'ពាក្យសម្ងាត់ថ្មី',
+      'cartTitle': 'រទេះ',
+      'wishlistTitle': 'បញ្ជីបំណង',
+      'orderHistoryTitle': 'ប្រវត្តិការបញ្ជាទិញ',
+      'addedToCart': 'បានបន្ថែមទៅរទេះ!',
+      'loginToViewOrders': 'សូមចូលដើម្បីមើលប្រវត្តិការបញ្ជាទិញរបស់អ្នក។',
+      'error': 'កំហុស',
+      'noOrdersFound': 'រកមិនឃើញការបញ្ជាទិញទេ។',
     },
   };
 
@@ -187,6 +208,19 @@ class AppLocalizations {
       _localizedValues[locale.languageCode]!['oldPassword']!;
   String get newPassword =>
       _localizedValues[locale.languageCode]!['newPassword']!;
+
+  String get cartTitle => _localizedValues[locale.languageCode]!['cartTitle']!;
+  String get wishlistTitle =>
+      _localizedValues[locale.languageCode]!['wishlistTitle']!;
+  String get orderHistoryTitle =>
+      _localizedValues[locale.languageCode]!['orderHistoryTitle']!;
+  String get addedToCart =>
+      _localizedValues[locale.languageCode]!['addedToCart']!;
+  String get loginToViewOrders =>
+      _localizedValues[locale.languageCode]!['loginToViewOrders']!;
+  String get error => _localizedValues[locale.languageCode]!['error']!;
+  String get noOrdersFound =>
+      _localizedValues[locale.languageCode]!['noOrdersFound']!;
 }
 
 class _AppLocalizationsDelegate

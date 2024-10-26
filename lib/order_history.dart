@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_with_firebase/firestore_service.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'language/app_localizations.dart';
 import 'order_model.dart';
 
 class OrderCard extends StatelessWidget {
@@ -70,13 +71,13 @@ class OrderHistoryPage extends StatelessWidget {
     final user = FirebaseAuth.instance.currentUser;
 
     if (user == null) {
-      return const Center(
-          child: Text('Please log in to view your order history.'));
+      return Center(
+          child: Text(AppLocalizations.of(context).loginToViewOrders));
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Order History'),
+         title: Text(AppLocalizations.of(context).orderHistoryTitle),
       ),
       body: StreamBuilder<List<Order>>(
         stream: firestoreService.getOrders(user.uid),
@@ -84,9 +85,9 @@ class OrderHistoryPage extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Center(child: Text('${AppLocalizations.of(context).error}: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No orders found.'));
+            return Center(child: Text(AppLocalizations.of(context).noOrdersFound));
           } else {
             final orders = snapshot.data!;
             return ListView.builder(

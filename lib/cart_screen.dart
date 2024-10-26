@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'cart_logic.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_with_firebase/firestore_service.dart';
+import 'language/app_localizations.dart';
 import 'order_model.dart';
 
 class CartScreen extends StatefulWidget {
@@ -21,7 +22,7 @@ class _CartScreenState extends State<CartScreen> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         foregroundColor: Theme.of(context).appBarTheme.foregroundColor,
-        title: Text("Cart Screen"),
+        title: Text(AppLocalizations.of(context).cartTitle),
       ),
       body: _buildBody(),
       bottomNavigationBar: _buildTotalAmountBar(),

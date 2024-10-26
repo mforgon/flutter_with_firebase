@@ -3,6 +3,8 @@ import 'package:flutter_with_firebase/cart_logic.dart';
 import 'package:flutter_with_firebase/product_provider.dart';
 import 'package:provider/provider.dart';
 
+import 'language/app_localizations.dart';
+
 class WishlistPage extends StatelessWidget {
   const WishlistPage({super.key});
 
@@ -14,7 +16,7 @@ class WishlistPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Wishlist'),
+        title: Text(AppLocalizations.of(context).wishlistTitle),
       ),
       body: ListView.builder(
         itemCount: productProvider.wishlist.length,
