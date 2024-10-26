@@ -56,7 +56,7 @@ AppBar buildAppBar(BuildContext context, ThemeProvider themeProvider) {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const WishlistPage()),
+            MaterialPageRoute(builder: (context) =>  const WishlistPage()),
           );
         },
       ),

@@ -50,6 +50,13 @@ class AppLocalizations {
       'changePassword': 'Change Password',
       'oldPassword': 'Old Password',
       'newPassword': 'New Password',
+      'cartTitle': 'Cart',
+      'wishlistTitle': 'Wishlist',
+      'orderHistoryTitle': 'Order History',
+      'addedToCart': 'added to cart!',
+      'loginToViewOrders': 'Please log in to view your order history.',
+      'error': 'Error',
+      'noOrdersFound': 'No orders found.',
     },
     'zh': {
       'appTitle': '威米商城',

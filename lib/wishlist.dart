@@ -11,6 +11,7 @@ class WishlistPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final productProvider = Provider.of<ProductProvider>(context);
+    final wishlist = productProvider?.wishlist ?? [];
     final cartLogic =
         Provider.of<CartLogic>(context); // Accessing the cart logic
 
@@ -19,9 +20,9 @@ class WishlistPage extends StatelessWidget {
         title: Text(AppLocalizations.of(context).wishlistTitle),
       ),
       body: ListView.builder(
-        itemCount: productProvider.wishlist.length,
+        itemCount: wishlist.length,
         itemBuilder: (context, index) {
-          final product = productProvider.wishlist[index];
+          final product = wishlist[index];
           return ListTile(
             leading: Image.network(
               product.imageUrl,
