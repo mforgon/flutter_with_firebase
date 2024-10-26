@@ -28,8 +28,8 @@ class OrderCard extends StatelessWidget {
             const SizedBox(height: 8.0),
             const Text('Products:',
                 style: TextStyle(fontWeight: FontWeight.bold)),
-            ...order.products.map((product) {
-              return ProductTile(product: product);
+            ...order.items.map((orderItem) {
+              return ProductTile(orderItem: orderItem);
             }),
           ],
         ),
@@ -39,9 +39,9 @@ class OrderCard extends StatelessWidget {
 }
 
 class ProductTile extends StatelessWidget {
-  final Product product;
+  final OrderItem orderItem;
 
-  const ProductTile({super.key, required this.product});
+  const ProductTile({super.key, required this.orderItem});
 
   @override
   Widget build(BuildContext context) {
@@ -49,13 +49,14 @@ class ProductTile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: ListTile(
         leading: Image.network(
-          product.imageUrl,
+          orderItem.product.imageUrl,
           width: 50,
           height: 50,
           fit: BoxFit.cover,
         ),
-        title: Text(product.name),
-        subtitle: Text('\$${product.price.toStringAsFixed(2)}'),
+        title: Text(orderItem.product.name),
+        subtitle: Text(
+            '\$${orderItem.product.price.toStringAsFixed(2)} x ${orderItem.quantity}'),
       ),
     );
   }

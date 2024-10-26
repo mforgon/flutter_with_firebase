@@ -1,17 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_with_firebase/product.dart';
+import 'product.dart';
+
+class OrderItem {
+  final Product product;
+  final int quantity;
+
+  OrderItem({
+    required this.product,
+    required this.quantity,
+  });
+}
 
 class Order {
   final String id;
   final String userId;
-  final List<Product> products;
+  final List<OrderItem> items;
   final double totalAmount;
   final DateTime date;
 
   Order({
     required this.id,
     required this.userId,
-    required this.products,
+    required this.items,
     required this.totalAmount,
     required this.date,
   });
@@ -21,8 +31,11 @@ class Order {
     return Order(
       id: doc.id,
       userId: data['userId'] ?? '',
-      products: (data['products'] as List)
-          .map((item) => Product.fromMap(item as Map<String, dynamic>, ''))
+      items: (data['items'] as List)
+          .map((item) => OrderItem(
+                product: Product.fromMap(item['product'] as Map<String, dynamic>, ''),
+                quantity: item['quantity'] as int,
+              ))
           .toList(),
       totalAmount: (data['totalAmount'] as num?)?.toDouble() ?? 0.0,
       date: (data['date'] as Timestamp?)?.toDate() ?? DateTime.now(),
@@ -32,7 +45,10 @@ class Order {
   Map<String, dynamic> toMap() {
     return {
       'userId': userId,
-      'products': products.map((product) => product.toMap()).toList(),
+      'items': items.map((item) => {
+        'product': item.product.toMap(),
+        'quantity': item.quantity,
+      }).toList(),
       'totalAmount': totalAmount,
       'date': date,
     };

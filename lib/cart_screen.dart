@@ -148,46 +148,45 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   void _checkout(BuildContext context) {
-    final cartLogic = context.read<CartLogic>();
-    final userId = FirebaseAuth.instance.currentUser?.uid;
+  final cartLogic = context.read<CartLogic>();
+  final userId = FirebaseAuth.instance.currentUser?.uid;
 
-    if (userId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please log in to proceed with checkout.')),
-      );
-      return;
-    }
-
-    final firestoreService =
-        Provider.of<FirestoreService>(context, listen: false);
-
-    final orderId = DateTime.now().millisecondsSinceEpoch.toString();
-
-    // Create a list of products with their quantities
-    List<Product> orderProducts = [];
-    cartLogic.cartItems.forEach((product, quantity) {
-      for (int i = 0; i < quantity; i++) {
-        orderProducts.add(product);
-      }
-    });
-
-    final newOrder = Order(
-      id: orderId,
-      userId: userId,
-      products: orderProducts,
-      totalAmount: cartLogic.calculateTotalAmount(),
-      date: DateTime.now(),
+  if (userId == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Please log in to proceed with checkout.')),
     );
-
-    firestoreService.addOrder(newOrder).then((_) {
-      cartLogic.clearCart();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Order placed successfully!')),
-      );
-    }).catchError((error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error placing order: $error')),
-      );
-    });
+    return;
   }
+
+  final firestoreService =
+      Provider.of<FirestoreService>(context, listen: false);
+
+  final orderId = DateTime.now().millisecondsSinceEpoch.toString();
+
+  // Create a list of OrderItems
+  List<OrderItem> orderItems = cartLogic.cartItems.entries.map((entry) {
+    return OrderItem(product: entry.key, quantity: entry.value);
+  }).toList();
+
+  final newOrder = Order(
+    id: orderId,
+    userId: userId,
+    items: orderItems,
+    totalAmount: cartLogic.calculateTotalAmount(),
+    date: DateTime.now(),
+  );
+
+  firestoreService.addOrder(newOrder).then((_) {
+    cartLogic.clearCart();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Order placed successfully!')),
+    );
+  }).catchError((error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Error placing order: $error')),
+    );
+  });
+}
+
+  
 }

@@ -185,26 +185,28 @@ Widget buildProductCard(BuildContext context, Product product, User? user,
   );
 }
 
-void placeOrder(BuildContext context, Product product, String userId,
-    FirestoreService firestoreService) {
-  final orderId = DateTime.now().millisecondsSinceEpoch.toString();
-  final newOrder = Order(
-    id: orderId,
-    userId: userId,
-    products: [product],
-    totalAmount: product.price,
-    date: DateTime.now(),
-  );
 
-  context.read<CartLogic>().toggleProductInCart(product);
 
-  firestoreService.addOrder(newOrder).then((_) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Product added to cart!')),
-    );
-  }).catchError((error) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Failed to add product: $error')),
-    );
-  });
-}
+// void placeOrder(BuildContext context, Product product, String userId,
+//     FirestoreService firestoreService) {
+//   final orderId = DateTime.now().millisecondsSinceEpoch.toString();
+//   final newOrder = Order(
+//     id: orderId,
+//     userId: userId,
+//     products: [product],
+//     totalAmount: product.price,
+//     date: DateTime.now(),
+//   );
+
+//   context.read<CartLogic>().toggleProductInCart(product);
+
+//   firestoreService.addOrder(newOrder).then((_) {
+//     ScaffoldMessenger.of(context).showSnackBar(
+//       SnackBar(content: Text('Product added to cart!')),
+//     );
+//   }).catchError((error) {
+//     ScaffoldMessenger.of(context).showSnackBar(
+//       SnackBar(content: Text('Failed to add product: $error')),
+//     );
+//   });
+// }
