@@ -17,25 +17,25 @@ class _AuthWrapperState extends State<AuthWrapper> {
   @override
   void initState() {
     super.initState();
-    _checkCurrentUser();
-    // Show the splash screen for 3 seconds
-    Future.delayed(const Duration(seconds: 3), () {
+    // _checkCurrentUser();
+    // Show the splash screen for 2 seconds
+    Future.delayed(const Duration(seconds: 2), () {
       setState(() {
         _isSplashScreenVisible = false;
       });
     });
   }
 
-  // Check if a user is currently logged in
-  void _checkCurrentUser() async {
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      // User is signed in
-      setState(() {
-        _isSplashScreenVisible = false;
-      });
-    }
-  }
+  // // Check if a user is currently logged in
+  // void _checkCurrentUser() async {
+  //   User? user = FirebaseAuth.instance.currentUser;
+  //   if (user != null) {
+  //     // User is signed in
+  //     setState(() {
+  //       _isSplashScreenVisible = false;
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
