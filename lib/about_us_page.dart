@@ -20,13 +20,15 @@ class _AboutUsPageState extends State<AboutUsPage> {
   ];
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => _pages[index]),
-      );
-    });
+    if (index != _selectedIndex) {
+      setState(() {
+        _selectedIndex = index;
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => _pages[index]),
+        );
+      });
+    }
   }
 
   @override
@@ -34,6 +36,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('About Us'),
+        automaticallyImplyLeading: false,
       ),
       body: const Padding(
         padding: EdgeInsets.all(16.0),

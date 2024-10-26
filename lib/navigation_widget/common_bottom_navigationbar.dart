@@ -13,7 +13,8 @@ class CommonBottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context); // Get the localizations instance
+    final localizations =
+        AppLocalizations.of(context); // Get the localizations instance
 
     return BottomNavigationBar(
       items: <BottomNavigationBarItem>[
