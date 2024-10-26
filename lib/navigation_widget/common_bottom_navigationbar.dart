@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_with_firebase/language/app_localizations.dart'; // Import your localization class
 
 class CommonBottomNavigationBar extends StatelessWidget {
   final int selectedIndex;
@@ -13,26 +12,24 @@ class CommonBottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations =
-        AppLocalizations.of(context); // Get the localizations instance
-
     return BottomNavigationBar(
-      items: <BottomNavigationBarItem>[
+      items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: const Icon(Icons.home),
-          label: localizations.home, // Use localized string
+          icon: Icon(Icons.home),
+          label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: const Icon(Icons.person),
-          label: localizations.profile, // Use localized string
+          icon: Icon(Icons.person),
+          label: 'Profile',
         ),
         BottomNavigationBarItem(
-          icon: const Icon(Icons.info),
-          label: localizations.aboutUs, // Use localized string
+          icon: Icon(Icons.info),
+          label: 'About Us',
         ),
       ],
       currentIndex: selectedIndex,
-      selectedItemColor: Colors.blueAccent,
+      selectedItemColor: Colors.blueAccent, // Highlight the selected icon in blue
+      unselectedItemColor: Colors.grey, // Optional: Set color for unselected icons
       onTap: onItemTapped,
     );
   }
