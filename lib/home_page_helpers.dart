@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'product.dart';
 import 'product_details_page.dart';
 import 'firestore_service.dart';
-import 'order_model.dart';
 import 'product_provider.dart';
 
 Widget buildHorizontalProductList(

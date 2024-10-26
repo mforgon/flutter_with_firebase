@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_with_firebase/firestore_service.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'product.dart';
 import 'order_model.dart';
 
 class OrderCard extends StatelessWidget {
