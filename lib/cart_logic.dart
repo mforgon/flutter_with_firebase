@@ -1,41 +1,79 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_with_firebase/product.dart';
+import 'product.dart';
 
 class CartLogic extends ChangeNotifier {
-  List<Product> _cartList = [];
-  List<Product> _wishlist = []; // Separate wishlist
+  Map<Product, int> _cartItems = {}; // Cart items with quantities
+  List<Product> _wishlist = []; // Wishlist items
 
-  List<Product> get cartList => _cartList;
+  Map<Product, int> get cartItems => _cartItems;
   List<Product> get wishlist => _wishlist;
 
-  // Toggle product only in the Cart list
+  // Cart Methods
   void toggleProductInCart(Product item) {
-    if (isProductInCart(item)) {
+    if (_cartItems.containsKey(item)) {
       removeFromCart(item);
     } else {
       addToCart(item);
     }
   }
 
-  // Toggle product only in the Wishlist list
+  void addToCart(Product item) {
+    if (_cartItems.containsKey(item)) {
+      _cartItems[item] = _cartItems[item]! + 1; // Increment quantity
+    } else {
+      _cartItems[item] = 1; // Add item with quantity 1
+    }
+    notifyListeners();
+  }
+
+  void removeFromCart(Product item) {
+    _cartItems.remove(item); // Remove item completely
+    notifyListeners();
+  }
+
+  void incrementQuantity(Product item) {
+    if (_cartItems.containsKey(item)) {
+      _cartItems[item] = _cartItems[item]! + 1; // Increment quantity
+      notifyListeners();
+    }
+  }
+
+  void decrementQuantity(Product item) {
+    if (_cartItems.containsKey(item) && _cartItems[item]! > 1) {
+      _cartItems[item] = _cartItems[item]! - 1; // Decrement quantity
+    } else {
+      removeFromCart(item); // Remove item if quantity is 1
+    }
+    notifyListeners();
+  }
+
+  double calculateTotalAmount() {
+    double total = 0.0;
+    _cartItems.forEach((product, quantity) {
+      total += product.price * quantity; // Calculate total based on quantity
+    });
+    return total;
+  }
+
+  void clearCart() {
+    _cartItems.clear();
+    notifyListeners();
+  }
+
+  int get numOfCartItems => _cartItems.length; // Number of unique products
+
+  int get numOfItems {
+    // Calculate the total number of items based on quantities
+    return _cartItems.values.fold(0, (total, quantity) => total + quantity);
+  }
+
+  // Wishlist Methods
   void toggleProductInWishlist(Product item) {
     if (isProductInWishlist(item)) {
       removeFromWishlist(item);
     } else {
       addToWishlist(item);
     }
-  }
-
-  void addToCart(Product item) {
-    if (!isProductInCart(item)) {
-      _cartList.add(item);
-      notifyListeners();
-    }
-  }
-
-  void removeFromCart(Product item) {
-    _cartList.removeWhere((cartItem) => cartItem.id == item.id);
-    notifyListeners();
   }
 
   void addToWishlist(Product item) {
@@ -50,28 +88,14 @@ class CartLogic extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool isProductInCart(Product item) {
-    return _cartList.any((cartItem) => cartItem.id == item.id);
-  }
-
   bool isProductInWishlist(Product item) {
     return _wishlist.any((wishlistItem) => wishlistItem.id == item.id);
   }
 
-  int get numOfCartItems => _cartList.length;
+  int get numOfWishlistItems => _wishlist.length;
 
-  double calculateTotalAmount() {
-    double total = 0.0;
-    for (var product in _cartList) {
-      total += product.price;
-    }
-    return total;
-  }
-
-  int get numOfItems => _cartList.length;
-
-  void clearCart() {
-    _cartList.clear();
+  void clearWishlist() {
+    _wishlist.clear();
     notifyListeners();
   }
 }

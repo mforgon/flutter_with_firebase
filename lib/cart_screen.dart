@@ -29,35 +29,78 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   Widget _buildBody() {
-    var cartList = context.watch<CartLogic>().cartList;
-    return cartList.isEmpty
+    var cartItems = context.watch<CartLogic>().cartItems;
+    return cartItems.isEmpty
         ? Center(
             child: Text('Your cart is empty!',
                 style: Theme.of(context).textTheme.bodyLarge))
-        : _buildListView(cartList.cast<Product>());
+        : _buildListView(cartItems);
   }
 
-  Widget _buildListView(List<Product> items) {
+  Widget _buildListView(Map<Product, int> items) {
     return ListView.builder(
       itemCount: items.length,
       itemBuilder: (context, index) {
-        return _buildItem(items[index]);
+        final product = items.keys.elementAt(index);
+        final quantity = items[product] ?? 0;
+        return _buildItem(product, quantity);
       },
     );
   }
 
-  Widget _buildItem(Product item) {
-    return ListTile(
-      title: Text(item.name, style: Theme.of(context).textTheme.titleMedium),
-      subtitle: SizedBox(
-        height: 100,
-        child: Image.network(item.imageUrl),
-      ),
-      trailing: IconButton(
-        onPressed: () {
-          context.read<CartLogic>().toggleProductInCart(item);
-        },
-        icon: Icon(Icons.cancel, color: Theme.of(context).iconTheme.color),
+  Widget _buildItem(Product item, int quantity) {
+    return Card(
+      margin: EdgeInsets.all(4.0),
+      child: Padding(
+        padding: EdgeInsets.all(4.0),
+        child: Column(
+          children: [
+            ListTile(
+              title: Text(item.name,
+                  style: Theme.of(context).textTheme.titleMedium),
+              subtitle: Text(
+                'Price: \$${item.price.toStringAsFixed(2)}',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ),
+            SizedBox(
+              height: 100,
+              child: Image.network(item.imageUrl),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    context.read<CartLogic>().decrementQuantity(item);
+                  },
+                  icon: Icon(Icons.remove_circle_outline),
+                ),
+                Text(
+                  quantity.toString(),
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                IconButton(
+                  onPressed: () {
+                    context.read<CartLogic>().incrementQuantity(item);
+                  },
+                  icon: Icon(Icons.add_circle_outline),
+                ),
+                IconButton(
+                  onPressed: () {
+                    context.read<CartLogic>().removeFromCart(item);
+                  },
+                  icon: Icon(Icons.delete_outline,
+                      color: Theme.of(context).colorScheme.error),
+                ),
+              ],
+            ),
+            Text(
+              'Subtotal: \$${(item.price * quantity).toStringAsFixed(2)}',
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -67,13 +110,25 @@ class _CartScreenState extends State<CartScreen> {
 
     return BottomAppBar(
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(0.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              'Total: \$${totalAmount.toStringAsFixed(2)}',
-              style: Theme.of(context).textTheme.titleLarge,
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Total Amount:',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                Text(
+                  '\$${totalAmount.toStringAsFixed(2)}',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ],
             ),
             ElevatedButton(
               onPressed: totalAmount > 0
@@ -81,7 +136,10 @@ class _CartScreenState extends State<CartScreen> {
                       _checkout(context);
                     }
                   : null,
-              child: Text('Checkout'),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                child: Text('Checkout'),
+              ),
             ),
           ],
         ),
@@ -104,10 +162,19 @@ class _CartScreenState extends State<CartScreen> {
         Provider.of<FirestoreService>(context, listen: false);
 
     final orderId = DateTime.now().millisecondsSinceEpoch.toString();
+
+    // Create a list of products with their quantities
+    List<Product> orderProducts = [];
+    cartLogic.cartItems.forEach((product, quantity) {
+      for (int i = 0; i < quantity; i++) {
+        orderProducts.add(product);
+      }
+    });
+
     final newOrder = Order(
       id: orderId,
       userId: userId,
-      products: List.from(cartLogic.cartList), // Only use cart items
+      products: orderProducts,
       totalAmount: cartLogic.calculateTotalAmount(),
       date: DateTime.now(),
     );

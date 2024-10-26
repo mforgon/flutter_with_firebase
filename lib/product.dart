@@ -2,31 +2,31 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_with_firebase/fake_product_model.dart';
 
 class Product {
-  final String id; 
+  final String id;
   final String name;
   final String imageUrl;
   final double price;
-  final String description; 
-  final String category;    
+  final String description;
+  final String category;
 
   Product({
     required this.id,
     required this.name,
     required this.imageUrl,
     required this.price,
-    required this.description, 
-    required this.category,    
+    required this.description,
+    required this.category,
   });
 
   factory Product.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return Product(
-      id: doc.id, 
+      id: doc.id,
       name: data['name'] ?? '',
       imageUrl: data['imageUrl'] ?? '',
       price: (data['price'] as num?)?.toDouble() ?? 0.0,
-      description: data['description'] ?? '', 
-      category: data['category'] ?? '',        
+      description: data['description'] ?? '',
+      category: data['category'] ?? '',
     );
   }
 
@@ -36,8 +36,8 @@ class Product {
       name: data['name'] ?? '',
       imageUrl: data['imageUrl'] ?? '',
       price: (data['price'] as num?)?.toDouble() ?? 0.0,
-      description: data['description'] ?? '', 
-      category: data['category'] ?? '',       
+      description: data['description'] ?? '',
+      category: data['category'] ?? '',
     );
   }
 
@@ -46,8 +46,8 @@ class Product {
       'name': name,
       'imageUrl': imageUrl,
       'price': price,
-      'description': description, 
-      'category': category,       
+      'description': description,
+      'category': category,
     };
   }
 

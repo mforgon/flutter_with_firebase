@@ -92,7 +92,7 @@ class _ProfilePageState extends State<ProfilePage> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            expandedHeight: 400.0,
+            expandedHeight: 250.0,
             floating: false,
             pinned: true,
             leading: IconButton(
@@ -107,24 +107,46 @@ class _ProfilePageState extends State<ProfilePage> {
               },
             ),
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(AppLocalizations.of(context).profile),
-              background: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Image.asset(
-                    profilePicUrl,
-                    fit: BoxFit.cover,
-                  ),
-                  Container(
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [Colors.transparent, Colors.black54],
+              background: Container(
+                color: Theme.of(context).primaryColor.withOpacity(0.1),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 150,
+                      height: 150,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Theme.of(context).primaryColor,
+                          width: 3,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 10,
+                            offset: Offset(0, 5),
+                          ),
+                        ],
+                      ),
+                      child: ClipOval(
+                        child: Image.asset(
+                          profilePicUrl,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                    SizedBox(height: 16),
+                    Text(
+                      user?.displayName ?? '',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
