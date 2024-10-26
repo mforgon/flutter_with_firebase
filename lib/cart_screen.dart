@@ -31,7 +31,9 @@ class _CartScreenState extends State<CartScreen> {
   Widget _buildBody() {
     var cartList = context.watch<CartLogic>().cartList;
     return cartList.isEmpty
-        ? Center(child: Text('Your cart is empty!', style: Theme.of(context).textTheme.bodyLarge))
+        ? Center(
+            child: Text('Your cart is empty!',
+                style: Theme.of(context).textTheme.bodyLarge))
         : _buildListView(cartList.cast<Product>());
   }
 
@@ -105,7 +107,7 @@ class _CartScreenState extends State<CartScreen> {
     final newOrder = Order(
       id: orderId,
       userId: userId,
-      products: cartLogic.cartList,
+      products: List.from(cartLogic.cartList), // Only use cart items
       totalAmount: cartLogic.calculateTotalAmount(),
       date: DateTime.now(),
     );
@@ -114,11 +116,6 @@ class _CartScreenState extends State<CartScreen> {
       cartLogic.clearCart();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Order placed successfully!')),
-      );
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const OrderHistoryPage()),
       );
     }).catchError((error) {
       ScaffoldMessenger.of(context).showSnackBar(

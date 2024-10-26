@@ -35,8 +35,8 @@ class WishlistPage extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.add_shopping_cart),
                   onPressed: () {
-                    // Add product to cart
-                    cartLogic.toggleProductInCart(product);
+                    // Only add to cart, do not toggle both
+                    cartLogic.addToCart(product);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('${product.name} added to cart!')),
                     );
@@ -46,6 +46,7 @@ class WishlistPage extends StatelessWidget {
                   icon: const Icon(Icons.remove_circle),
                   onPressed: () {
                     productProvider.removeFromWishlist(product.id);
+                    cartLogic.removeFromWishlist(product);
                   },
                 ),
               ],

@@ -92,6 +92,7 @@ Widget buildHorizontalProductList(
 
 Widget buildProductCard(BuildContext context, Product product, User? user,
     FirestoreService firestoreService, ProductProvider productProvider) {
+  final cartLogic = Provider.of<CartLogic>(context);
   return Card(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(16.0),
@@ -161,10 +162,15 @@ Widget buildProductCard(BuildContext context, Product product, User? user,
                         },
                       ),
                       IconButton(
-                        icon: const Icon(Icons.add_shopping_cart, size: 20),
+                        icon: const Icon(Icons.add_shopping_cart),
                         onPressed: () {
-                          placeOrder(
-                              context, product, user!.uid, firestoreService);
+                          // Only add to cart, do not toggle both
+                          cartLogic.addToCart(product);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content:
+                                    Text('${product.name} added to cart!')),
+                          );
                         },
                       ),
                     ],
