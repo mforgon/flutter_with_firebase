@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'product.dart';
 
 class CartLogic extends ChangeNotifier {
-  Map<Product, int> _cartItems = {}; // Cart items with quantities
-  List<Product> _wishlist = []; // Wishlist items
+  final Map<Product, int> _cartItems = {}; // Cart items with quantities
+  final List<Product> _wishlist = []; // Wishlist items
 
   Map<Product, int> get cartItems => _cartItems;
   List<Product> get wishlist => _wishlist;

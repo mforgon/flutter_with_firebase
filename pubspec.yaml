@@ -44,6 +44,7 @@ dependencies:
   intl: ^0.19.0
   flutter_secure_storage: ^9.2.2
   connectivity_plus:  ^5.0.0
+  flutter_dotenv: ^5.0.2
   # firebase_messaging: ^15.0.4
   
 
@@ -80,6 +81,7 @@ flutter:
     - assets/team_member2.jpg
     - assets/bradpit.jpg
     - assets/lisa.jpg
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

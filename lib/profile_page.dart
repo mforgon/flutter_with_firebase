@@ -5,7 +5,7 @@ import 'package:flutter_with_firebase/home_page.dart';
 import 'package:flutter_with_firebase/language/app_localizations.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  const ProfilePage({super.key});
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -85,7 +85,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
-    final profilePicUrl = './assets/team_member1.jpg';
+    const profilePicUrl = './assets/team_member1.jpg';
 
     return Scaffold(
       body: CustomScrollView(
@@ -95,12 +95,12 @@ class _ProfilePageState extends State<ProfilePage> {
             floating: false,
             pinned: true,
             leading: IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: const Icon(Icons.arrow_back),
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => HomePage(),
+                    builder: (context) => const HomePage(),
                   ),
                 );
               },
@@ -120,7 +120,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           color: Theme.of(context).primaryColor,
                           width: 3,
                         ),
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                             color: Colors.black26,
                             blurRadius: 10,
@@ -135,7 +135,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     Text(
                       user?.displayName ?? '',
                       style: TextStyle(
@@ -173,8 +173,8 @@ class _ProfilePageState extends State<ProfilePage> {
                               controller: nameController,
                               decoration: InputDecoration(
                                 labelText: AppLocalizations.of(context).name,
-                                border: OutlineInputBorder(),
-                                prefixIcon: Icon(Icons.person),
+                                border: const OutlineInputBorder(),
+                                prefixIcon: const Icon(Icons.person),
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
@@ -190,18 +190,18 @@ class _ProfilePageState extends State<ProfilePage> {
                               readOnly: true,
                               decoration: InputDecoration(
                                 labelText: AppLocalizations.of(context).email,
-                                border: OutlineInputBorder(),
-                                prefixIcon: Icon(Icons.email),
+                                border: const OutlineInputBorder(),
+                                prefixIcon: const Icon(Icons.email),
                               ),
                             ),
                             const SizedBox(height: 16),
                             ElevatedButton.icon(
                               onPressed: _updateProfile,
-                              icon: Icon(Icons.save),
+                              icon: const Icon(Icons.save),
                               label: Text(
                                   AppLocalizations.of(context).saveProfile),
                               style: ElevatedButton.styleFrom(
-                                minimumSize: Size(double.infinity, 50),
+                                minimumSize: const Size(double.infinity, 50),
                               ),
                             ),
                             if (profileError != null)
@@ -237,8 +237,8 @@ class _ProfilePageState extends State<ProfilePage> {
                               decoration: InputDecoration(
                                 labelText:
                                     AppLocalizations.of(context).oldPassword,
-                                border: OutlineInputBorder(),
-                                prefixIcon: Icon(Icons.lock_outline),
+                                border: const OutlineInputBorder(),
+                                prefixIcon: const Icon(Icons.lock_outline),
                               ),
                             ),
                             const SizedBox(height: 16),
@@ -248,18 +248,18 @@ class _ProfilePageState extends State<ProfilePage> {
                               decoration: InputDecoration(
                                 labelText:
                                     AppLocalizations.of(context).newPassword,
-                                border: OutlineInputBorder(),
-                                prefixIcon: Icon(Icons.lock),
+                                border: const OutlineInputBorder(),
+                                prefixIcon: const Icon(Icons.lock),
                               ),
                             ),
                             const SizedBox(height: 16),
                             ElevatedButton.icon(
                               onPressed: _updatePassword,
-                              icon: Icon(Icons.security),
+                              icon: const Icon(Icons.security),
                               label: Text(
                                   AppLocalizations.of(context).changePassword),
                               style: ElevatedButton.styleFrom(
-                                minimumSize: Size(double.infinity, 50),
+                                minimumSize: const Size(double.infinity, 50),
                               ),
                             ),
                             if (passwordError != null)

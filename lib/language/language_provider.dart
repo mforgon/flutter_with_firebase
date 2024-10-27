@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class LanguageProvider with ChangeNotifier {
-  final _storage = FlutterSecureStorage();
+  final _storage = const FlutterSecureStorage();
   Locale _locale = const Locale('en');
 
   Locale get locale => _locale;

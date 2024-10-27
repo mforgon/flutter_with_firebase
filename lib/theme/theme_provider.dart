@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  final _storage = FlutterSecureStorage();
+  final _storage = const FlutterSecureStorage();
   int _themeIndex = 0; // 0: System, 1: Light, 2: Dark
 
   int get themeIndex => _themeIndex;

@@ -11,7 +11,7 @@ class WishlistPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final productProvider = Provider.of<ProductProvider>(context);
-    final wishlist = productProvider?.wishlist ?? [];
+    final wishlist = productProvider.wishlist;
     final cartLogic =
         Provider.of<CartLogic>(context); // Accessing the cart logic
 

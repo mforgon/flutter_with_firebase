@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_with_firebase/language/app_localizations.dart';
 
 class CommonBottomNavigationBar extends StatelessWidget {
   final int selectedIndex;
@@ -13,18 +14,18 @@ class CommonBottomNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      items: const <BottomNavigationBarItem>[
+      items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
+          icon: const Icon(Icons.home),
+          label: AppLocalizations.of(context).home,
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'Profile',
+          icon: const Icon(Icons.person),
+          label: AppLocalizations.of(context).profile,
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.info),
-          label: 'About Us',
+          icon: const Icon(Icons.info),
+          label: AppLocalizations.of(context).aboutUs,
         ),
       ],
       currentIndex: selectedIndex,

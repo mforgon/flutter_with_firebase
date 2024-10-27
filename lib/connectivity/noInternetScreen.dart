@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'connection_provider.dart';
 
 class NoInternetScreen extends StatefulWidget {
-  const NoInternetScreen({Key? key}) : super(key: key);
+  const NoInternetScreen({super.key});
 
   @override
   _NoInternetScreenState createState() => _NoInternetScreenState();
@@ -40,7 +40,7 @@ class _NoInternetScreenState extends State<NoInternetScreen> {
                 ),
                 const SizedBox(height: 20),
                 _isLoading
-                    ? CircularProgressIndicator()
+                    ? const CircularProgressIndicator()
                     : ElevatedButton(
                         onPressed: () async {
                           setState(() {

@@ -73,12 +73,12 @@ AppBar buildAppBar(BuildContext context, ThemeProvider themeProvider) {
       IconButton(
         onPressed: () {
           Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => CartScreen(),
+            builder: (context) => const CartScreen(),
           ));
         },
         icon: Badge(
           label: Text("${context.watch<CartLogic>().numOfItems}"),
-          child: Icon(Icons.shopping_cart),
+          child: const Icon(Icons.shopping_cart),
         ),
       ),
     ],

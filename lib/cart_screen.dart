@@ -51,9 +51,9 @@ class _CartScreenState extends State<CartScreen> {
 
   Widget _buildItem(Product item, int quantity) {
     return Card(
-      margin: EdgeInsets.all(4.0),
+      margin: const EdgeInsets.all(4.0),
       child: Padding(
-        padding: EdgeInsets.all(4.0),
+        padding: const EdgeInsets.all(4.0),
         child: Column(
           children: [
             ListTile(
@@ -75,7 +75,7 @@ class _CartScreenState extends State<CartScreen> {
                   onPressed: () {
                     context.read<CartLogic>().decrementQuantity(item);
                   },
-                  icon: Icon(Icons.remove_circle_outline),
+                  icon: const Icon(Icons.remove_circle_outline),
                 ),
                 Text(
                   quantity.toString(),
@@ -85,7 +85,7 @@ class _CartScreenState extends State<CartScreen> {
                   onPressed: () {
                     context.read<CartLogic>().incrementQuantity(item);
                   },
-                  icon: Icon(Icons.add_circle_outline),
+                  icon: const Icon(Icons.add_circle_outline),
                 ),
                 IconButton(
                   onPressed: () {
@@ -137,7 +137,7 @@ class _CartScreenState extends State<CartScreen> {
                       _checkout(context);
                     }
                   : null,
-              child: Padding(
+              child: const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 child: Text('Checkout'),
               ),
@@ -154,7 +154,7 @@ class _CartScreenState extends State<CartScreen> {
 
   if (userId == null) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Please log in to proceed with checkout.')),
+      const SnackBar(content: Text('Please log in to proceed with checkout.')),
     );
     return;
   }
@@ -166,17 +166,17 @@ class _CartScreenState extends State<CartScreen> {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('Confirm Checkout'),
+        title: const Text('Confirm Checkout'),
         content: Text('Do you want to proceed with the checkout for \$${totalAmount.toStringAsFixed(2)}?'),
         actions: <Widget>[
           TextButton(
-            child: Text('Cancel'),
+            child: const Text('Cancel'),
             onPressed: () {
               Navigator.of(context).pop(); // Close the dialog
             },
           ),
           TextButton(
-            child: Text('Confirm'),
+            child: const Text('Confirm'),
             onPressed: () {
               Navigator.of(context).pop(); // Close the dialog
               _proceedWithCheckout(context, cartLogic, userId);
@@ -208,7 +208,7 @@ void _proceedWithCheckout(BuildContext context, CartLogic cartLogic, String user
   firestoreService.addOrder(newOrder).then((_) {
     cartLogic.clearCart();
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Order placed successfully!')),
+      const SnackBar(content: Text('Order placed successfully!')),
     );
   }).catchError((error) {
     ScaffoldMessenger.of(context).showSnackBar(
