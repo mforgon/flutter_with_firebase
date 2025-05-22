@@ -24,6 +24,10 @@ class CommonBottomNavigationBar extends StatelessWidget {
           label: AppLocalizations.of(context).profile,
         ),
         BottomNavigationBarItem(
+          icon: const Icon(Icons.person),
+          label: AppLocalizations.of(context).profile,
+        ),
+        BottomNavigationBarItem(
           icon: const Icon(Icons.info),
           label: AppLocalizations.of(context).aboutUs,
         ),

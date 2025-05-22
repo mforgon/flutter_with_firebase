@@ -68,6 +68,7 @@ class _HomePageState extends State<HomePage> {
           },
           label: Text(AppLocalizations.of(context).addProduct),
           icon: const Icon(Icons.add),
+          
         ),
         bottomNavigationBar: CommonBottomNavigationBar(
           selectedIndex: _selectedIndex,

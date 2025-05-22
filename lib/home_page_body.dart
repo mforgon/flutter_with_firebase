@@ -80,11 +80,7 @@ class HomePageBody extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  AppLocalizations.of(context).sortByPrice,
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                ),
-                DropdownButton<String>(
+                  DropdownButton<String>(
                   value: productProvider.priceSort,
                   items: priceSortOptions.map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
@@ -108,6 +104,11 @@ class HomePageBody extends StatelessWidget {
                   ),
                   icon: const Icon(Icons.arrow_drop_down, size: 20),
                 ),
+                Text(
+                  AppLocalizations.of(context).sortByPrice,
+                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                ),
+              
               ],
             ),
           ),

@@ -98,6 +98,7 @@ Drawer buildDrawer(BuildContext context, User user) {
                   DropdownMenuItem(value: 'km', child: Text('ខ្មែរ')),
                   DropdownMenuItem(value: 'en', child: Text('English')),
                   DropdownMenuItem(value: 'zh', child: Text('中文')),
+                  DropdownMenuItem(value: 'TH', child: Text('Thai')),
                 ],
               );
             },
